@@ -1,0 +1,15 @@
+@use "scss/mixin";
+.app-container {
+  min-width: 480px;
+  @include mixin.md {
+    width: 800px;
+  }
+  @include mixin.lg {
+    width: 1000px;
+  }
+  @include mixin.xl {
+    width: 1400px;
+  }
+}
+
+

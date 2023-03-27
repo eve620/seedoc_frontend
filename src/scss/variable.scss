@@ -1,0 +1,24 @@
+// break point
+// for phone and other mobile device
+$screen-sm-min: 600px;
+// for pad
+$screen-md-min: 1000px;
+// for pc
+$screen-lg-min: 1200px;
+// for large monitor
+$screen-xl-min: 1400px;
+
+// theme color and font
+$theme-primary: #6ACCFD;
+$theme-text: #121212;
+$theme-subtext: #808080;
+$theme-surface: #FFFFFF;
+$theme-hover: #F3F3F3;
+$theme-border: #EBEBEB;
+$theme-placeholder: #BDC3C9;
+$theme-shadow: rgba(255, 255, 255, .2);
+$theme-font-family: 'Microsoft YaHei';
+$theme-font-mini: regular 12px 16px $theme-font-family;
+$theme-font-content: regular 14px 22px $theme-font-family;
+$theme-font-emphasize: bold 14px 22px $theme-font-family;
+$theme-font-title: semi-bold 24px 36px $theme-font-family;
