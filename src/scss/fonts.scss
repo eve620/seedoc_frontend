@@ -1,0 +1,16 @@
+@use "variable";
+.font-content {
+  font: variable.$theme-font-content
+}
+
+.font-mini {
+  font: variable.$theme-font-mini;
+}
+
+.font-emphasize {
+  font: variable.$theme-font-emphasize
+}
+
+.font-title {
+  font: variable.$theme-font-title;
+}

@@ -1,10 +1,11 @@
-import './component/FileTable/FileTable'
-import FileTable from "./component/FileTable/FileTable";
+import './component/Fonts/Fonts'
+import  "./component/Fonts/Fonts";
 import './App.scss'
+import Fonts from "./component/Fonts/Fonts";
 function App() {
   return (
     <div className="app-container">
-      <FileTable/>
+      <Fonts/>
     </div>
   )
 }
