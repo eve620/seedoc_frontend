@@ -1,5 +1,6 @@
 @use "./scss/variable";
 @use "./scss/fonts";
+@use "./scss/flex";
 :root {
   font: variable.$theme-font-content;
 }

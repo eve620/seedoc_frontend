@@ -1,0 +1,7 @@
+@use "variable";
+
+@mixin shadow-bottom {
+  border-bottom: 1px solid variable.$theme-border;
+  box-shadow: rgba(0, 0, 0, 0.14) 0 0 7px;
+  margin-bottom: 2px;
+}

@@ -1,0 +1,8 @@
+@mixin triangle ($size,$color,$rotation) {
+  width: 0;
+  height: 0;
+  border-left: $size solid transparent;
+  border-right: $size solid transparent;
+  border-bottom: $size solid $color;
+  transform: rotate($rotation);
+}

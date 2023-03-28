@@ -1,0 +1,22 @@
+@use "../../scss/shapes";
+@use "../../scss/variable";
+.avatar {
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+
+  img {
+    height: 32px;
+    border-radius: 16px;
+  }
+  //&:after {
+  //  content: "";
+  //  @include shapes.triangle(5px,variable.$theme-subtext,270deg)
+  //}
+  //&:hover:after {
+  //  content: "";
+  //  @include shapes.triangle(5px,variable.$theme-subtext,180deg)
+  //}
+}
