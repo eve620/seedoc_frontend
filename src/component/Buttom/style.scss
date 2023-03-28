@@ -1,0 +1,16 @@
+@use "../../scss/variable";
+
+.button-text {
+  display: inline-block;
+  padding: 6px 16px;
+  cursor: pointer;
+  &:hover {
+    background: variable.$theme-hover;
+  }
+}
+
+.button > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

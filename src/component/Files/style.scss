@@ -8,10 +8,25 @@
   //border-radius: 4px;
 }
 
+.file-menus {
+  display: flex;
+  > .button-groups {
+    display: flex;
+    gap: 12px;
+  }
+}
+
 .input-container {
   display: flex;
   align-content: stretch;
   border: 1px solid variable.$theme-border;
   overflow: clip;
   border-radius: 4px;
+}
+
+.paths {
+  > span {
+    color: variable.$theme-placeholder;
+    margin: 0 6px;
+  }
 }
