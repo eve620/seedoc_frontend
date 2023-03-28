@@ -1,0 +1,7 @@
+@use "../../scss/variable";
+#top-bar {
+  background: variable.$theme-primary;
+  height: 48px;
+  display: flex;
+  align-items: center;
+}

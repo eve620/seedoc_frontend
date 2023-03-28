@@ -1,7 +1,8 @@
 @use "./scss/variable";
 @use "./scss/fonts";
 :root {
-  display: flex;
-  justify-content: center;
-  font-family: variable.$theme-font-family;
+  font: variable.$theme-font-content;
+}
+body {
+  margin: 0;
 }
