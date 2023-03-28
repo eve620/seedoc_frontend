@@ -1,0 +1,36 @@
+@use "../../scss/variable";
+
+.file-container {
+  height: 100%;
+  min-height: 400px;
+  width: 100%;
+  //border: 1px solid variable.$theme-border;
+  //border-radius: 4px;
+}
+
+.input-container {
+  display: flex;
+  align-content: stretch;
+  border: 1px solid variable.$theme-border;
+  overflow: clip;
+  border-radius: 4px;
+
+  >span {
+    padding: 8px 16px;
+    background: variable.$theme-placeholder;
+    color: variable.$theme-light;
+    white-space: nowrap;
+  }
+
+  >input {
+    font: variable.$theme-font-content;
+    flex-grow: 1;
+    padding: 0 12px;
+    margin: 4px;
+    align-self: stretch;
+    border: none;
+    &:focus {
+      outline: none;
+    }
+  }
+}
