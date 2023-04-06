@@ -1,0 +1,7 @@
+@use "../../scss/variable";
+.paths {
+  > span {
+    color: variable.$theme-placeholder;
+    margin: 0 6px;
+  }
+}

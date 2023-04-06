@@ -1,0 +1,3 @@
+[submodule "src/sdk"]
+	path = src/sdk
+	url = git@github.com:shlande/clouddisk-sdk.git

@@ -1,82 +1,90 @@
-import Files from "../../component/Files/Files"
-import Pages from "../../component/Pages/Pages";
+import Files, {Props} from "../../component/Files/Files"
+import type {Props as FileProps} from "../../component/Files/Files";
 import Buttom from "../../component/Buttom/Buttom";
+import {getInstance} from "../../sdk/Instance";
+import Paths from "../../component/Paths/Paths";
+import {useEffect, useState} from "react";
+import {FileInfo} from "../../sdk/Types";
 
 export default () => {
+  const instance = getInstance()
+  const [paths, setPaths] = useState("测试目录/文件夹1")
+  const [file, setFiles] = useState<FileProps[]>([])
+
+  useEffect(() => {
+    const input = document.getElementById("file-input") as HTMLInputElement
+    input!.onchange = (() => {
+      const file = input.files ? input.files[0] : null
+      if (!file) {
+        return
+      }
+      instance.upload(paths, file).do().then((res: string ) => console.log(res))
+    })
+    instance.login("admin","admin")
+  })
+
+  const downloadOrOpen = (file: FileProps) => {
+    // 大卡文件夹
+    if (file.type == "dir") {
+      const newPath = paths.length == 0 ? file.name : paths + "/" + file.name
+      setPaths(newPath)
+      return
+    }
+    // 否则下载文件
+    getInstance().objectUrl(file.id).then(res => window.open(res))
+  }
+
+  useEffect(() => {
+    instance.list(paths).then(res => {
+      const files: FileProps[] = []
+      res.forEach(file => {
+        files.push(fileInfoToFileProps(file))
+      })
+      setFiles(files)
+    }).catch(error => console.error(error))
+  }, [paths])
 
   return (
     <div className="app-container">
       <div className="file-container">
         <div className="file-menus">
-          <div className="paths">
-            <Buttom text="home"></Buttom>
-            <span>/</span>
-            <Buttom text="root"></Buttom>
-            <span>/</span>
-            <Buttom text="其他"></Buttom>
-          </div>
+          <Paths path={paths} onPathChange={setPaths}/>
           <div className="flex-spacer"></div>
           <div className="button-groups">
-            <Buttom text="上传" icon="upload"/>
+            <input type="file" id="file-input" style={{display: "none"}}/>
+            <Buttom text="上传" icon="upload" onClick={uploadFile}/>
             <Buttom text="下载" icon="download"/>
-            <Buttom text="删除" icon="trash"/>
-            <Buttom text="分享" icon="share"/>
+            <Buttom text="删除" onClick={() => deleteFile("")} icon="trash"/>
+            <Buttom text="新建" icon="share"/>
           </div>
         </div>
-        <Files data={testData}/>
-        <div className="page-container">
-          <Pages total={8}/>
-        </div>
+        <Files onChange={fileSelectedChange} onDoubleClick={downloadOrOpen} data={file}/>
       </div>
     </div>
   )
 }
 
-const testData = [
-  {
-    id: "1",
-    name: "西电开学报告.pdf",
-    size: 1023432,
-    uploader: "shlande",
-    created: new Date()
-  },
-  {
-    id: "2",
-    name: "西电开学报告.pdf",
-    size: 1023432,
-    uploader: "shlande",
-    created: new Date()
-  },{
-    id: "3",
-    name: "西电开学报告.pdf",
-    size: 1023432,
-    uploader: "shlande",
-    created: new Date()
-  },{
-    id: "4",
-    name: "西电开学报告.pdf",
-    size: 1023432,
-    uploader: "shlande",
-    created: new Date()
-  },{
-    id: "5",
-    name: "西电开学报告.pdf",
-    size: 1023432,
-    uploader: "shlande",
-    created: new Date()
-  },
-  {
-    id: "6",
-    name: "西电开学报告.pdf",
-    size: 1023432,
-    uploader: "shlande",
-    created: new Date()
-  },
-  {
-    id: "7",
-    name: "西电开学报告.pdf",
-    size: 1023432,
-    uploader: "shlande",
-    created: new Date()
+const deleteFile = (key: string) => {
+  // TODO: POP message to user
+  getInstance().objectDelete(key)
+}
+
+const fileSelectedChange = (selected: Set<FileProps>) => {
+  console.log(selected)
+}
+
+
+const uploadFile = () => {
+  document.getElementById("file-input")?.click();
+}
+
+const fileInfoToFileProps = (file: FileInfo): FileProps => {
+  return {
+    id: file.etag,
+    name: file.name,
+    size: file.size,
+    type: file.contentType,
+    created: new Date(),
+    uploader: file.owner
   }
-]
+}
