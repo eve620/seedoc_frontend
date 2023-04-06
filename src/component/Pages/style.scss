@@ -1,0 +1,15 @@
+@use "../../scss/variable";
+.pages {
+  div {
+    display: inline-block;
+    padding: 6px 12px;
+    &:hover {
+      border-radius: 50%;
+      background-color: variable.$theme-hover;
+    }
+  }
+}
+.page-container {
+  display: flex;
+  justify-content: right;
+}

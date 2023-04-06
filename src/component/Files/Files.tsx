@@ -1,46 +1,37 @@
 import "./style.scss"
 import Buttom from "../Buttom/Buttom";
+import {useState} from "react";
 
-export default () => {
+type Props = {
+  id: string
+  name: string
+  size: number
+  created: Date
+  uploader: string
+}
+export default (props: { data: Props[] }) => {
+  const [active] = useState(new Map<string,boolean>())
   return (
-    <div className="file-container">
-      <div className="file-menus">
-        <div className="paths">
-          <Buttom text="home"></Buttom>
-          <span>/</span>
-          <Buttom text="root"></Buttom>
-          <span>/</span>
-          <Buttom text="其他"></Buttom>
-        </div>
-        <div className="flex-spacer"></div>
-        <div className="button-groups">
-          <Buttom text="上传" icon="upload"/>
-          <Buttom text="下载" icon="download"/>
-          <Buttom text="删除" icon="trash"/>
-          <Buttom text="分享" icon="share"/>
-        </div>
-      </div>
-      <table className="file-table">
-        <thead>
-        <tr>
-          <th>Company</th>
-          <th>Contact</th>
-          <th>Country</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>Alfreds Futterkiste</td>
-          <td>Maria Anders</td>
-          <td>Germany</td>
-        </tr>
-        <tr>
-          <td>Centro comercial Moctezuma</td>
-          <td>Francisco Chang</td>
-          <td>Mexico</td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+    <table className="file-table" cellSpacing={0}>
+      <thead>
+      <tr>
+        <th>文件名称</th>
+        <th>文件大小</th>
+        <th>上传者</th>
+        <th>上传时间</th>
+      </tr>
+      </thead>
+      <tbody>
+      {props.data.map((data) => {
+        return (<tr key={data.id} className={active.get(data.id) ? "active" : ""}>
+          <td>{data.name}</td>
+          <td>{data.size}</td>
+          <td>{data.uploader}</td>
+          <td>{data.created.toLocaleDateString()}</td>
+        </tr>)
+      })}
+      </tbody>
+    </table>
   )
 }
+
