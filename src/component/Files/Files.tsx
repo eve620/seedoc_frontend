@@ -1,7 +1,14 @@
 import "./style.scss"
-import {useState} from "react";
+import {forwardRef, useImperativeHandle, useState} from "react";
+import {formatBytes, getFileType} from "../../utils";
 
 export type Props = {
+  data: File[],
+  onDoubleClick?: (file: File) => void,
+  onChange?: (active: Set<File>) => void
+}
+
+export type File = {
   id: string
   name: string
   size: number
@@ -9,10 +16,38 @@ export type Props = {
   created: Date
   uploader: string
 }
+
+export type Handler = {
+  active: () => Set<File>
+}
+
+
 // 如果使用 onClick, 那么不会记录active
 // 如果使用 onChange，那么不会调用click
-export default (props: { data: Props[], onDoubleClick?: (file: Props) => void, onChange?:(active:Set<Props>) => void}) => {
-  const [active] = useState(new Set<Props>())
+export default forwardRef<Handler, Props>((props: Props, ref) => {
+  const [active, setActive] = useState(new Set<File>())
+  useImperativeHandle(ref, () => ({
+    active: () => {
+      return active;
+    }
+  }));
+
+  const onClick = (data: File) => {
+    // 选中和反选择
+    if (active.has(data)) {
+      active.delete(data)
+    } else {
+      active.add(data)
+    }
+    // TODO: 使用更加节约内存的方法
+    setActive(new Set<File>(active))
+    props.onChange && props.onChange(active)
+  }
+  const onDoubleClick = (data: File) => {
+    if (props.onDoubleClick) {
+      props.onDoubleClick(data)
+    }
+  }
   return (
     <table className="file-table" cellSpacing={0}>
       <thead>
@@ -26,23 +61,13 @@ export default (props: { data: Props[], onDoubleClick?: (file: Props) => void, o
       </thead>
       <tbody>
       {props.data.map((data) => {
-        return (<tr onClick={() => {
-          if (props.onDoubleClick) {
-            props.onDoubleClick(data)
-          }
-          // 选择激活/反选
-          if (active.has(data)) {
-            active.delete(data)
-          } else {
-            active.add(data)
-          }
-          // 触发更新
-          props.onChange && props.onChange(active);
-        }
-        } key={data.id} className={isActive(active,data.id) ? "active" : ""}>
+        return (<tr
+          onClick={() => onClick(data)} key={data.id}
+          onDoubleClick={() => onDoubleClick(data)}
+          className={isActive(active, data.id) ? "active" : ""}>
           <td>{data.name}</td>
-          <td>{data.size}</td>
-          <td>{data.type}</td>
+          <td>{formatBytes(data.size)}</td>
+          <td>{getFileType(data.type)}</td>
           <td>{data.uploader}</td>
           <td>{data.created.toLocaleDateString()}</td>
         </tr>)
@@ -50,10 +75,9 @@ export default (props: { data: Props[], onDoubleClick?: (file: Props) => void, o
       </tbody>
     </table>
   )
-}
+})
 
-const isActive = (active :Set<Props>, id: string):boolean => {
-  console.log(active,id)
+const isActive = (active: Set<File>, id: string): boolean => {
   for (let i of active) {
     if (i.id == id) {
       return true
