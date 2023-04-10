@@ -3,6 +3,7 @@ import type {Props as FileProps} from "../../component/Files/Files";
 import Buttom from "../../component/Buttom/Buttom";
 import {getInstance} from "../../sdk/Instance";
 import Paths from "../../component/Paths/Paths";
+import Pop from "../../component/Pop/Pop"
 import {useEffect, useState} from "react";
 import {FileInfo} from "../../sdk/Types";
 
@@ -18,7 +19,9 @@ export default () => {
       if (!file) {
         return
       }
-      instance.upload(paths, file).do().then((res: string ) => console.log(res))
+      instance.upload(paths, file).do().then((res: string ) => Pop({message:"上传成功"})).catch(err => {
+        return Pop({message: "上传失败:"+ err})
+      })
     })
     instance.login("admin","admin")
   })
@@ -55,7 +58,7 @@ export default () => {
             <Buttom text="上传" icon="upload" onClick={uploadFile}/>
             <Buttom text="下载" icon="download"/>
             <Buttom text="删除" onClick={() => deleteFile("")} icon="trash"/>
-            <Buttom text="新建" icon="share"/>
+            <Buttom text="新建" onClick={() => Pop({message:"测试消息"})} icon="share"/>
           </div>
         </div>
         <Files onChange={fileSelectedChange} onDoubleClick={downloadOrOpen} data={file}/>
@@ -72,7 +75,6 @@ const deleteFile = (key: string) => {
 const fileSelectedChange = (selected: Set<FileProps>) => {
   console.log(selected)
 }
-
 
 const uploadFile = () => {
   document.getElementById("file-input")?.click();
