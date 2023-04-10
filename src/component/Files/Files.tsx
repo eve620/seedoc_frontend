@@ -1,6 +1,7 @@
 import "./style.scss"
 import {forwardRef, useImperativeHandle, useState} from "react";
 import {formatBytes, getFileType} from "../../utils";
+import Icon from "../Icon/Icon"
 
 export type Props = {
   data: File[],
@@ -49,31 +50,41 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     }
   }
   return (
-    <table className="file-table" cellSpacing={0}>
-      <thead>
-      <tr>
-        <th>文件名称</th>
-        <th>文件大小</th>
-        <th>文件类型</th>
-        <th>上传者</th>
-        <th>上传时间</th>
-      </tr>
-      </thead>
-      <tbody>
-      {props.data.map((data) => {
-        return (<tr
-          onClick={() => onClick(data)} key={data.id}
-          onDoubleClick={() => onDoubleClick(data)}
-          className={isActive(active, data.id) ? "active" : ""}>
-          <td>{data.name}</td>
-          <td>{formatBytes(data.size)}</td>
-          <td>{getFileType(data.type)}</td>
-          <td>{data.uploader}</td>
-          <td>{data.created.toLocaleDateString()}</td>
-        </tr>)
-      })}
-      </tbody>
-    </table>
+    <>
+      <table className="file-table" cellSpacing={0}>
+        <thead>
+        <tr>
+          <th>文件名称</th>
+          <th>文件大小</th>
+          <th>文件类型</th>
+          <th>上传者</th>
+          <th>上传时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {props.data.map((data) => {
+          return (<tr
+            onClick={() => onClick(data)} key={data.id}
+            onDoubleClick={() => onDoubleClick(data)}
+            className={isActive(active, data.id) ? "active" : ""}>
+            <td>{data.name}</td>
+            <td>{formatBytes(data.size)}</td>
+            <td>{getFileType(data.type)}</td>
+            <td>{data.uploader}</td>
+            <td>{data.created.toLocaleDateString()}</td>
+          </tr>)
+        })}
+        </tbody>
+      </table>
+      {props.data.length == 0 &&
+          <div className="empty">
+              <div>
+                  <Icon size={96} icon={"empty"}/>
+                  <span>什么都没有呢</span>
+              </div>
+          </div>
+      }
+    </>
   )
 })
 

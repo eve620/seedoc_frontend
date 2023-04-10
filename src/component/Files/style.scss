@@ -82,3 +82,14 @@
   }
 }
 
+.empty {
+  box-sizing: border-box;
+  width: 100%;
+  // TODO: height 100%
+  display: flex;
+  justify-content: center;
+  > div {
+    display: flex;
+    flex-flow: column;
+  }
+}

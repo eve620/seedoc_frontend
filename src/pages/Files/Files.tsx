@@ -109,6 +109,7 @@ export default () => {
             <Buttom text="下载" onClick={() => batchDownload()} icon="download"/>
             <Buttom text="删除" onClick={() => deleteFile("")} icon="trash"/>
             <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="create"/>
+            <Buttom text="重命名" icon="modify"/>
           </div>
         </div>
         <Files ref={fileList} onChange={fileSelectedChange} onDoubleClick={downloadOrOpen} data={file}/>
