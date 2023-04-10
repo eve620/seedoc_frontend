@@ -14,16 +14,22 @@
     white-space: nowrap;
   }
 
-  .large {
-    height: 32px;
+  > input {
     font: variable.$theme-font-content;
     flex-grow: 1;
     align-self: stretch;
     border: none;
-    padding: 8px 12px;
-
     &:focus {
       outline: none;
     }
+  }
+
+  .large {
+    height: 32px;
+    padding: 8px 12px;
+  }
+  .small {
+    height: 24px;
+    padding: 6px 8px;
   }
 }

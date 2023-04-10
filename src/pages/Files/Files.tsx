@@ -97,7 +97,7 @@ export default () => {
   return (
     <div className="app-container">
       <Modal title="新建文件夹" open={isNewDirOpen} onOk={onCreateDirOk} onCancel={onCreateDirCancel}>
-        <Input ref={newDirName}/>
+        <Input size={"small"} type={"text"} placeHolder={"文件夹名称"}  ref={newDirName}/>
       </Modal>
       <div className="file-container">
         <div className="file-menus">
@@ -108,7 +108,7 @@ export default () => {
             <Buttom text="上传" icon="upload" onClick={uploadFile}/>
             <Buttom text="下载" onClick={() => batchDownload()} icon="download"/>
             <Buttom text="删除" onClick={() => deleteFile("")} icon="trash"/>
-            <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="share"/>
+            <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="create"/>
           </div>
         </div>
         <Files ref={fileList} onChange={fileSelectedChange} onDoubleClick={downloadOrOpen} data={file}/>
