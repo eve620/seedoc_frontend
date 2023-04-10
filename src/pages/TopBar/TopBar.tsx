@@ -1,7 +1,7 @@
 import "./style.scss"
-import "../../component/Buttom/Buttom"
+import "../../component/Button/Button"
 import "./Menus"
-import Buttom from "../../component/Buttom/Buttom";
+import Buttom from "../../component/Button/Button";
 import Menus from "./Menus";
 
 export default () => {

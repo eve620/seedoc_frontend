@@ -1,24 +1,38 @@
 import "./style.scss"
-import Button from "../../component/Buttom/Buttom";
+import Button from "../../component/Button/Button";
+import Input from "../../component/Input/Input";
 
 export default () => {
   return (
     <div className="login">
       <div className="display">
-        {/*<img src="/login-display.png" alt="login-display"/>*/}
+        <div>
+          <h1>年度审核资料管理系统</h1>
+          <h2>西安电子科技大学</h2>
+          <div>
+            <li>安全</li>
+            <li>可靠</li>
+            <li>方便</li>
+          </div>
+        </div>
       </div>
       <div className="login-form-container">
         <div className="login-form">
+          <div className="title">登录</div>
           <form>
-            <input type="text" placeholder="用户名"/>
-            <input type="text" placeholder="密码"/>
+            <Input size={"large"} placeHolder={"用户名"} type={"text"}/>
+            <Input size={"large"} placeHolder={"密码"} type={"password"}/>
           </form>
-          <div className="login-button">
-            <span>登录</span>
+          <div className="login-button-container">
+            <div className="login-button">
+              <span>登录</span>
+            </div>
+            <div className="login-button">
+              <span>统一认证登录</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
   )
 }

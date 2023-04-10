@@ -7,9 +7,31 @@
 .display {
   height: 100vh;
   background-color: variable.$theme-primary;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   img {
     width: 100%;
     object-fit: cover;
+  }
+
+  > div {
+    margin-bottom: 128px;
+    h1 {
+      font: variable.$theme-font-display;
+      margin: 0;
+      color: variable.$theme-light;
+    }
+
+    h2 {
+      font-family: variable.$theme-font-title;
+      color: variable.$theme-light;
+    }
+    > div {
+      display: flex;
+      color: variable.$theme-light;
+      gap: 12px;
+    }
   }
 }
 
@@ -36,14 +58,27 @@
     }
   }
   gap: 32px;
-}
+  > div {
+    width: 100%;
+  }
 
-.login-button {
-  color: variable.$theme-light;
-  width: 100%;
-  padding: 16px 0px;
-  background-color: variable.$theme-primary;
-  display: flex;
-  justify-content: center;
-  border-radius: 8px;
+  .title {
+    font: variable.$theme-font-title;
+  }
+}
+.login-button-container {
+  > div {
+    color: variable.$theme-light;
+    height: 48px;
+    background-color: variable.$theme-primary;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    cursor: pointer;
+    &:nth-child(n+1) {
+      margin-top: 12px;
+    }
+  }
+
 }

@@ -1,6 +1,6 @@
 import Files, {File, Handler as FileHandler} from "../../component/Files/Files"
 import type {File as FileProps} from "../../component/Files/Files";
-import Buttom from "../../component/Buttom/Buttom";
+import Buttom from "../../component/Button/Button";
 import {getInstance} from "../../sdk/Instance";
 import Paths from "../../component/Paths/Paths";
 import Pop from "../../component/Pop/Pop"

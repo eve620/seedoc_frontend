@@ -1,4 +1,4 @@
-import Buttom from "../../component/Buttom/Buttom";
+import Buttom from "../../component/Button/Button";
 import Avatar from "../../component/Avatar/Avatar";
 
 export default () => {

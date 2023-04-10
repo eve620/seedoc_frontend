@@ -1,4 +1,4 @@
-import Buttom from "../Buttom/Buttom";
+import Buttom from "../Button/Button";
 import "./style.scss"
 
 type  Pros = {
