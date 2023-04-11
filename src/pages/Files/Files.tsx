@@ -68,6 +68,7 @@ export default () => {
     if (!file) {
       return
     }
+    console.log(paths)
     instance.upload(paths, file).do().then((res: string) => {
       refreshDir()
       return Pop({message: "上传成功"})
