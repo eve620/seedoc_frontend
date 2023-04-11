@@ -68,7 +68,10 @@ export default () => {
     if (!file) {
       return
     }
-    instance.upload(paths, file).do().then((res: string) => Pop({message: "上传成功"})).catch(err => {
+    instance.upload(paths, file).do().then((res: string) => {
+      refreshDir()
+      return Pop({message: "上传成功"})
+    }).catch(err => {
       return Pop({message: "上传失败:" + err})
     })
   }
