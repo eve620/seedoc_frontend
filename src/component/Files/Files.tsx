@@ -68,9 +68,9 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
         <tbody>
         {props.data.map((data) => {
           return (<tr
-            onClick={() => onClick(data)} key={data.id}
+            onClick={() => onClick(data)} key={data.name}
             onDoubleClick={() => onDoubleClick(data)}
-            className={isActive(active, data.id) ? "active" : ""}>
+            className={isActive(active, data.name) ? "active" : ""}>
             <td>{data.name}</td>
             <td>{formatBytes(data.size)}</td>
             <td>{getFileType(data.type)}</td>
@@ -92,9 +92,9 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
   )
 })
 
-const isActive = (active: Set<File>, id: string): boolean => {
+const isActive = (active: Set<File>, name: string): boolean => {
   for (let i of active) {
-    if (i.id == id) {
+    if (i.name == name) {
       return true
     }
   }
