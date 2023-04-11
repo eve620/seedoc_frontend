@@ -21,8 +21,6 @@ export default () => {
 
   // 文件更新与内容展示
   const refreshDir = () => {
-  }
-  useEffect(() => {
     instance.list(paths).then(res => {
       const files: FileProps[] = []
       res.forEach(file => {
@@ -30,6 +28,10 @@ export default () => {
       })
       setFiles(files)
     }).catch(error => console.error(error))
+  }
+
+  useEffect(() => {
+    refreshDir()
   }, [paths])
 
   // 创建文件夹
@@ -104,6 +106,7 @@ export default () => {
       promises.push(getInstance().objectDelete(pathJoin(paths, value.name)))
     })
     Promise.all(promises).then(res => {
+      refreshDir()
       return Pop({message: "删除成功"})
     }).catch(err => {
       return Pop({message: "删除失败:" + err.message})
