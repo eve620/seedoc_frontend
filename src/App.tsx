@@ -1,7 +1,9 @@
 import './App.scss'
-import {StrictMode} from "react"
-import {RouterProvider} from "react-router-dom"
-import {router} from "./router";
+import {StrictMode, useEffect} from "react"
+import {RouterProvider, useNavigate} from "react-router-dom"
+import {router, toLogin} from "./router";
+import {getInstance} from "./sdk/Instance";
+import Pop from "./component/Pop/Pop";
 
 function App() {
   return (

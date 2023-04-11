@@ -10,6 +10,7 @@ import {FileInfo} from "../../sdk/Types";
 import {Modal} from "antd";
 import Input, {Handler as InputHandler} from "../../component/Input/Input";
 import {isValidFilename, pathJoin} from "../../utils";
+import {toLogin} from "../../router";
 
 export default () => {
   const instance = getInstance()
