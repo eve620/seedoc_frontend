@@ -1,8 +1,12 @@
 import "./style.scss"
-import Button from "../../component/Button/Button";
 import Input from "../../component/Input/Input";
+import {toMain} from "../../router";
 
 export default () => {
+  const onLogin = () => {
+    toMain()
+    console.log("hi")
+  }
   return (
     <div className="login">
       <div className="display">
@@ -24,7 +28,7 @@ export default () => {
             <Input size={"large"} placeHolder={"密码"} type={"password"}/>
           </form>
           <div className="login-button-container">
-            <div className="login-button">
+            <div onClick={onLogin} className="login-button">
               <span>登录</span>
             </div>
             <div className="login-button">

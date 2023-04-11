@@ -1,16 +1,13 @@
-import './component/Fonts/Fonts'
-import "./component/Fonts/Fonts";
 import './App.scss'
-import TopBar from "./pages/TopBar/TopBar";
-import Files from "./pages/Files/Files"
-import Login from "./pages/Login/Login";
+import {StrictMode} from "react"
+import {RouterProvider} from "react-router-dom"
+import {router} from "./router";
+
 function App() {
   return (
-    <>
-      <TopBar/>
-      <Files/>
-      {/*<Login/>*/}
-    </>
+    <StrictMode>
+      <RouterProvider router={router}></RouterProvider>
+    </StrictMode>
   )
 }
 
