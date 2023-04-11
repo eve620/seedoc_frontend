@@ -1,5 +1,5 @@
 import "./style.scss"
-import {forwardRef, useImperativeHandle, useState} from "react";
+import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 import {formatBytes, getFileType} from "../../utils";
 import Icon from "../Icon/Icon"
 
@@ -32,6 +32,10 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
       return active;
     }
   }));
+
+  useEffect(() => {
+    setActive(new Set<File>)
+  },[props.data])
 
   const onClick = (data: File) => {
     // 选中和反选择
