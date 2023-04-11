@@ -86,7 +86,7 @@ export default () => {
       return
     }
     // 否则下载文件
-    getInstance().objectUrl(file.id).then(res => window.open(res))
+    getInstance().objectByPath(pathJoin(paths, file.name)).then(res => window.open(res))
   }
   const batchDownload = () => {
     const active = fileList.current!.active()
