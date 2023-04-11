@@ -11,6 +11,7 @@ import {Modal} from "antd";
 import Input, {Handler as InputHandler} from "../../component/Input/Input";
 import {isValidFilename, pathJoin} from "../../utils";
 import {toLogin} from "../../router";
+import paths from "../../component/Paths/Paths";
 
 export default () => {
   const instance = getInstance()
@@ -92,13 +93,27 @@ export default () => {
         window.open(url)
       })
     })
+  }
 
+  // 文件删除
+  const deleteObject = () => {
+    const active = fileList.current!.active()
+    // TODO: POP message to user
+    const promises = new Array<Promise<void>>();
+    active.forEach(value => {
+      promises.push(getInstance().objectDelete(pathJoin(paths, value.name)))
+    })
+    Promise.all(promises).then(res => {
+      return Pop({message: "删除成功"})
+    }).catch(err => {
+      return Pop({message: "删除失败:" + err.message})
+    })
   }
 
   return (
     <div className="app-container">
       <Modal title="新建文件夹" open={isNewDirOpen} onOk={onCreateDirOk} onCancel={onCreateDirCancel}>
-        <Input size={"small"} type={"text"} placeHolder={"文件夹名称"}  ref={newDirName}/>
+        <Input size={"small"} type={"text"} placeHolder={"文件夹名称"} ref={newDirName}/>
       </Modal>
       <div className="file-container">
         <div className="file-menus">
@@ -108,9 +123,8 @@ export default () => {
             <input onChange={onUploadFileChange} ref={fileInput} type="file" id="file-input" style={{display: "none"}}/>
             <Buttom text="上传" icon="upload" onClick={uploadFile}/>
             <Buttom text="下载" onClick={() => batchDownload()} icon="download"/>
-            <Buttom text="删除" onClick={() => deleteFile("")} icon="trash"/>
+            <Buttom text="删除" onClick={() => deleteObject()} icon="trash"/>
             <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="create"/>
-            <Buttom text="重命名" icon="modify"/>
           </div>
         </div>
         <Files ref={fileList} onChange={fileSelectedChange} onDoubleClick={downloadOrOpen} data={file}/>
@@ -119,10 +133,6 @@ export default () => {
   )
 }
 
-const deleteFile = (key: string) => {
-  // TODO: POP message to user
-  getInstance().objectDelete(key)
-}
 
 const fileSelectedChange = (selected: Set<FileProps>) => {
 

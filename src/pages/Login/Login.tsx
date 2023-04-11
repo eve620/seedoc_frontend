@@ -27,7 +27,6 @@ export default () => {
     }
     instance.login(uname, pwd).then(res => {
       return instance.whoami().then((uid) => {
-        console.log("login success,"+uid)
         toMain(navigate)
       })
     }).catch(err => Pop({message: err.message}))

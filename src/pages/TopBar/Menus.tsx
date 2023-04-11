@@ -13,7 +13,6 @@ export default () => {
   // 如果用户没有登录，跳转回登录界面
   useEffect(() => {
     instance.whoami().then(res => {
-      console.log(res)
       if (!res) {
         toLogin(navigate)
         return
