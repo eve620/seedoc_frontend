@@ -188,17 +188,20 @@ export default () => {
   const [isUploadShow, setIsUploadShow] = useState(false)
   const [isCreateDirShow, setIsCreateDirShow] = useState(false)
   const fileSelectedChange = (selected: Set<FileProps>) => {
-    setIsPasteShow(register != undefined)
-    setIsRenameShow(selected && selected.size == 1)
     setIsDownloadShow(selected && selected.size > 0)
-    setIsDeleteShow(selected && selected.size > 0)
     setIsCutShow(selected && selected.size > 0)
     instance.whoami().then(res => {
-      if (!res) {
+      if (!res || !canWrite(paths,res.permission)) {
         setIsUploadShow(false)
         setIsCreateDirShow(false)
+        setIsDeleteShow(false)
+        setIsRenameShow(false)
+        setIsPasteShow(false)
         return
       }
+      setIsPasteShow(register != undefined)
+      setIsRenameShow(selected && selected.size == 1)
+      setIsDeleteShow(selected && selected.size > 0)
       setIsUploadShow(canWrite(paths, res.permission))
       setIsCreateDirShow(canWrite(paths, res.permission))
     })
