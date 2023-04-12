@@ -38,7 +38,9 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
   }));
 
   useEffect(() => {
-    setActive(new Set<File>)
+    const active = new Set<File>()
+    setActive(active)
+    props.onChange&& props.onChange(active);
   },[props.data])
 
   const onClick = (data: File) => {

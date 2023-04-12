@@ -46,3 +46,7 @@ export function getFileType(mimeType: string): string {
   }
   return mimeType
 }
+
+export function canWrite(path:string, permission:string) {
+  return path.indexOf(permission) == 0
+}

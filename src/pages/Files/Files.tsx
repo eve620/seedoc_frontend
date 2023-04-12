@@ -9,7 +9,7 @@ import {FileInfo} from "../../sdk/Types";
 // import {Error} from "../../sdk/Types"
 import {Modal} from "antd";
 import Input, {Handler as InputHandler} from "../../component/Input/Input";
-import {isValidFilename, pathJoin} from "../../utils";
+import {canWrite, isValidFilename, pathJoin} from "../../utils";
 import {toLogin} from "../../router";
 import paths from "../../component/Paths/Paths";
 import {types} from "sass";
@@ -156,7 +156,7 @@ export default () => {
       active: fileList.current!.active()
     })
     fileList.current!.reset()
-    return Pop({message:"操作成功"})
+    return Pop({message: "操作成功"})
   }
   const onPaste = () => {
     if (!register) {
@@ -172,6 +172,30 @@ export default () => {
     Promise.all(promises).then(res => {
       refreshDir()
       return Pop({message: "操作成功"})
+    })
+  }
+  //按钮组控制
+  const [isPasteShow, setIsPasteShow] = useState(false)
+  const [isRenameShow, setIsRenameShow] = useState(false)
+  const [isDownloadShow, setIsDownloadShow] = useState(false)
+  const [isDeleteShow, setIsDeleteShow] = useState(false)
+  const [isCutShow, setIsCutShow] = useState(false)
+  const [isUploadShow, setIsUploadShow] = useState(false)
+  const [isCreateDirShow, setIsCreateDirShow] = useState(false)
+  const fileSelectedChange = (selected: Set<FileProps>) => {
+    setIsPasteShow(register != undefined)
+    setIsRenameShow(selected && selected.size == 1)
+    setIsDownloadShow(selected && selected.size > 0)
+    setIsDeleteShow(selected && selected.size > 0)
+    setIsCutShow(selected && selected.size > 0)
+    instance.whoami().then(res => {
+      if (!res) {
+        setIsUploadShow(false)
+        setIsCreateDirShow(false)
+        return
+      }
+      setIsUploadShow(canWrite(paths,res.permission))
+      setIsCreateDirShow(canWrite(paths,res.permission))
     })
   }
 
@@ -191,23 +215,18 @@ export default () => {
           <div className="button-groups">
             <input onChange={onUploadFileChange} ref={fileInput} type="file" id="file-input" style={{display: "none"}}/>
             <Buttom text="上传" icon="upload" onClick={uploadFile}/>
-            <Buttom text="下载" onClick={() => batchDownload()} icon="download"/>
-            <Buttom text="删除" onClick={() => deleteObject()} icon="trash"/>
+            {isDownloadShow && <Buttom text="下载" onClick={() => batchDownload()} icon="download"/>}
+            {isDeleteShow && <Buttom text="删除" onClick={() => deleteObject()} icon="trash"/>}
             <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="create"/>
-            <Buttom text="重命名" onClick={() => onModifyClick()} icon="modify"/>
-            <Buttom text="剪切" onClick={() => onSetRegister("cut")} icon={"cut"}/>
-            <Buttom text="粘贴" onClick={() => onPaste()} icon={"paste"}/>
+            {isRenameShow && <Buttom text="重命名" onClick={() => onModifyClick()} icon="modify"/>}
+            {isCutShow && <Buttom text="剪切" onClick={() => onSetRegister("cut")} icon={"cut"}/>}
+            {isPasteShow && <Buttom text="粘贴" onClick={() => onPaste()} icon={"paste"}/>}
           </div>
         </div>
         <Files ref={fileList} onChange={fileSelectedChange} onDoubleClick={downloadOrOpen} data={file}/>
       </div>
     </div>
   )
-}
-
-
-const fileSelectedChange = (selected: Set<FileProps>) => {
-
 }
 
 const fileInfoToFileProps = (file: FileInfo): FileProps => {
