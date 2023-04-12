@@ -117,10 +117,41 @@ export default () => {
     })
   }
 
+  // 文件重命名
+  const [isModifyDirNameActive, setIsModifyDirNameActive] = useState(false);
+  const modifyDirName = useRef<InputHandler>(null);
+  const onModifyClick = () => {
+    const active = fileList.current!.active();
+    if (!active || active.size != 1) {
+      return Pop({message:"只能同时重命名一个文件"})
+    }
+    setIsModifyDirNameActive(true)
+  }
+  const onModifyOk = () => {
+    const active = fileList.current!.active().values().next().value as FileProps;
+    const newName = modifyDirName.current!.value()
+    if (!isValidFilename(newName)) {
+      return Pop({message: "无效的文件名"})
+    }
+    console.log(active,newName,paths)
+    instance.rename(pathJoin(paths,active.name),pathJoin(paths,newName)).then(() => {
+      setIsModifyDirNameActive(false)
+      refreshDir()
+      return Pop({message:"修改成功"})
+    }).catch(err => Pop({message:err.message}))
+  }
+  const onModifyCancel = () => {
+    modifyDirName.current!.reset()
+    setIsModifyDirNameActive(false)
+  }
+
   return (
     <div className="app-container">
       <Modal title="新建文件夹" open={isNewDirOpen} onOk={onCreateDirOk} onCancel={onCreateDirCancel}>
         <Input size={"small"} type={"text"} placeHolder={"文件夹名称"} ref={newDirName}/>
+      </Modal>
+      <Modal title="修改文件名" open={isModifyDirNameActive} onOk={onModifyOk} onCancel={onModifyCancel}>
+        <Input size={"small"} type={"text"} placeHolder={"新文件名"} ref={modifyDirName}/>
       </Modal>
       <div className="file-container">
         <div className="file-menus">
@@ -132,6 +163,7 @@ export default () => {
             <Buttom text="下载" onClick={() => batchDownload()} icon="download"/>
             <Buttom text="删除" onClick={() => deleteObject()} icon="trash"/>
             <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="create"/>
+            <Buttom text="重命名" onClick={() => onModifyClick()} icon="modify"/>
           </div>
         </div>
         <Files ref={fileList} onChange={fileSelectedChange} onDoubleClick={downloadOrOpen} data={file}/>
