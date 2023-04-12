@@ -20,6 +20,7 @@ export type File = {
 
 export type Handler = {
   active: () => Set<File>
+  reset:() => void
 }
 
 
@@ -30,6 +31,9 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
   useImperativeHandle(ref, () => ({
     active: () => {
       return active;
+    },
+    reset: () => {
+      setActive(new Set())
     }
   }));
 

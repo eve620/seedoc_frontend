@@ -12,6 +12,8 @@ import Input, {Handler as InputHandler} from "../../component/Input/Input";
 import {isValidFilename, pathJoin} from "../../utils";
 import {toLogin} from "../../router";
 import paths from "../../component/Paths/Paths";
+import {types} from "sass";
+import String = types.String;
 
 export default () => {
   const instance = getInstance()
@@ -123,7 +125,7 @@ export default () => {
   const onModifyClick = () => {
     const active = fileList.current!.active();
     if (!active || active.size != 1) {
-      return Pop({message:"只能同时重命名一个文件"})
+      return Pop({message: "只能同时重命名一个文件"})
     }
     setIsModifyDirNameActive(true)
   }
@@ -133,17 +135,46 @@ export default () => {
     if (!isValidFilename(newName)) {
       return Pop({message: "无效的文件名"})
     }
-    console.log(active,newName,paths)
-    instance.rename(pathJoin(paths,active.name),pathJoin(paths,newName)).then(() => {
+    console.log(active, newName, paths)
+    instance.rename(pathJoin(paths, active.name), pathJoin(paths, newName)).then(() => {
       setIsModifyDirNameActive(false)
       refreshDir()
-      return Pop({message:"修改成功"})
-    }).catch(err => Pop({message:err.message}))
+      return Pop({message: "修改成功"})
+    }).catch(err => Pop({message: err.message}))
   }
   const onModifyCancel = () => {
     modifyDirName.current!.reset()
     setIsModifyDirNameActive(false)
   }
+
+  // 复制剪切
+  const [register, setRegister] = useState<Register | undefined>(undefined)
+  const onSetRegister = (type: Register['type']) => {
+    setRegister({
+      type: type,
+      path: paths,
+      active: fileList.current!.active()
+    })
+    fileList.current!.reset()
+    return Pop({message:"操作成功"})
+  }
+  const onPaste = () => {
+    if (!register) {
+      return Pop({message: "请先复制/剪切文件"})
+    }
+    if (!register || register.type != "cut") {
+      return Pop({message: "功能暂未实现"})
+    }
+    const promises = new Array<Promise<any>>()
+    register.active.forEach((file) => {
+      promises.push(instance.rename(pathJoin(register.path, file.name), pathJoin(paths, file.name)))
+    })
+    Promise.all(promises).then(res => {
+      refreshDir()
+      return Pop({message: "操作成功"})
+    })
+  }
+
 
   return (
     <div className="app-container">
@@ -164,6 +195,8 @@ export default () => {
             <Buttom text="删除" onClick={() => deleteObject()} icon="trash"/>
             <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="create"/>
             <Buttom text="重命名" onClick={() => onModifyClick()} icon="modify"/>
+            <Buttom text="剪切" onClick={() => onSetRegister("cut")} icon={"cut"}/>
+            <Buttom text="粘贴" onClick={() => onPaste()} icon={"paste"}/>
           </div>
         </div>
         <Files ref={fileList} onChange={fileSelectedChange} onDoubleClick={downloadOrOpen} data={file}/>
@@ -190,4 +223,10 @@ const fileInfoToFileProps = (file: FileInfo): FileProps => {
 
 const errHandler = async (err: any) => {
   return Pop({message: err.error})
+}
+
+type Register = {
+  type: "copy" | "cut"
+  path: string
+  active: Set<FileProps>
 }
