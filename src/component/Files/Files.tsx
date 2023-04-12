@@ -32,15 +32,15 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     active: () => {
       return active;
     },
-    reset: () => {
-      setActive(new Set())
-    }
+    reset
   }));
-
-  useEffect(() => {
+  const reset = () => {
     const active = new Set<File>()
     setActive(active)
     props.onChange&& props.onChange(active);
+  }
+  useEffect(() => {
+    reset()
   },[props.data])
 
   const onClick = (data: File) => {

@@ -153,13 +153,14 @@ export default () => {
   }
 
   // 复制剪切
-  const [register, setRegister] = useState<Register | undefined>(undefined)
+  let [register, setRegister] = useState<Register | undefined>(undefined)
   const onSetRegister = (type: Register['type']) => {
-    setRegister({
+    register = {
       type: type,
       path: paths,
       active: fileList.current!.active()
-    })
+    }
+    setRegister(register)
     fileList.current!.reset()
     return Pop({message: "操作成功"})
   }
@@ -167,12 +168,12 @@ export default () => {
     if (!register) {
       return Pop({message: "请先复制/剪切文件"})
     }
-    if (!register || register.type != "cut") {
+    if (register.type != "cut") {
       return Pop({message: "功能暂未实现"})
     }
     const promises = new Array<Promise<any>>()
     register.active.forEach((file) => {
-      promises.push(instance.rename(pathJoin(register.path, file.name), pathJoin(paths, file.name)))
+      promises.push(instance.rename(pathJoin(register!.path, file.name), pathJoin(paths, file.name)))
     })
     Promise.all(promises).then(res => {
       refreshDir()
@@ -189,7 +190,6 @@ export default () => {
   const [isCreateDirShow, setIsCreateDirShow] = useState(false)
   const fileSelectedChange = (selected: Set<FileProps>) => {
     setIsDownloadShow(selected && selected.size > 0)
-    setIsCutShow(selected && selected.size > 0)
     instance.whoami().then(res => {
       if (!res || !canWrite(paths,res.permission)) {
         setIsUploadShow(false)
@@ -197,8 +197,10 @@ export default () => {
         setIsDeleteShow(false)
         setIsRenameShow(false)
         setIsPasteShow(false)
+        setIsCutShow(false)
         return
       }
+      setIsCutShow(selected && selected.size > 0)
       setIsPasteShow(register != undefined)
       setIsRenameShow(selected && selected.size == 1)
       setIsDeleteShow(selected && selected.size > 0)
@@ -222,13 +224,13 @@ export default () => {
           <div className="flex-spacer"></div>
           <div className="button-groups">
             <input onChange={onUploadFileChange} ref={fileInput} type="file" id="file-input" style={{display: "none"}}/>
-            {isUploadShow && <Buttom text="上传" icon="upload" onClick={uploadFile}/>}
-            {isDownloadShow && <Buttom text="下载" onClick={() => batchDownload()} icon="download"/>}
             {isDeleteShow && <Buttom text="删除" onClick={() => deleteObject()} icon="trash"/>}
-            {isCreateDirShow && <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="create"/>}
             {isRenameShow && <Buttom text="重命名" onClick={() => onModifyClick()} icon="modify"/>}
             {isCutShow && <Buttom text="剪切" onClick={() => onSetRegister("cut")} icon={"cut"}/>}
             {isPasteShow && <Buttom text="粘贴" onClick={() => onPaste()} icon={"paste"}/>}
+            {isDownloadShow && <Buttom text="下载" onClick={() => batchDownload()} icon="download"/>}
+            {isUploadShow && <Buttom text="上传" icon="upload" onClick={uploadFile}/>}
+            {isCreateDirShow && <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="create"/>}
           </div>
         </div>
         <Files ref={fileList} onChange={fileSelectedChange} onDoubleClick={downloadOrOpen} data={file}/>
