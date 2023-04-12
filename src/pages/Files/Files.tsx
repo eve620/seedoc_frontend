@@ -25,10 +25,15 @@ export default () => {
   const refreshDir = () => {
     instance.list(paths).then(res => {
       const files: FileProps[] = []
+      const promises = new Array<Promise<any>>()
       res.forEach(file => {
-        files.push(fileInfoToFileProps(file))
+        promises.push(instance.user(file.owner).then(res => {
+          const file_ = fileInfoToFileProps(file)
+          file_.uploader = res.name
+          files.push(file_)
+        }))
       })
-      setFiles(files)
+      Promise.all(promises).then(() => setFiles(files))
     }).catch(error => console.error(error))
   }
 
@@ -194,8 +199,8 @@ export default () => {
         setIsCreateDirShow(false)
         return
       }
-      setIsUploadShow(canWrite(paths,res.permission))
-      setIsCreateDirShow(canWrite(paths,res.permission))
+      setIsUploadShow(canWrite(paths, res.permission))
+      setIsCreateDirShow(canWrite(paths, res.permission))
     })
   }
 
