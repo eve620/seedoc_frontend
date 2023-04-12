@@ -214,10 +214,10 @@ export default () => {
           <div className="flex-spacer"></div>
           <div className="button-groups">
             <input onChange={onUploadFileChange} ref={fileInput} type="file" id="file-input" style={{display: "none"}}/>
-            <Buttom text="上传" icon="upload" onClick={uploadFile}/>
+            {isUploadShow && <Buttom text="上传" icon="upload" onClick={uploadFile}/>}
             {isDownloadShow && <Buttom text="下载" onClick={() => batchDownload()} icon="download"/>}
             {isDeleteShow && <Buttom text="删除" onClick={() => deleteObject()} icon="trash"/>}
-            <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="create"/>
+            {isCreateDirShow && <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="create"/>}
             {isRenameShow && <Buttom text="重命名" onClick={() => onModifyClick()} icon="modify"/>}
             {isCutShow && <Buttom text="剪切" onClick={() => onSetRegister("cut")} icon={"cut"}/>}
             {isPasteShow && <Buttom text="粘贴" onClick={() => onPaste()} icon={"paste"}/>}

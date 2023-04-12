@@ -48,5 +48,9 @@ export function getFileType(mimeType: string): string {
 }
 
 export function canWrite(path:string, permission:string) {
+  if (permission.slice(-1) == "/") {
+    permission = permission.slice(0,-1)
+  }
+  console.log(path,permission,path.indexOf(permission))
   return path.indexOf(permission) == 0
 }
