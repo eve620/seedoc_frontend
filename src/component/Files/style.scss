@@ -1,5 +1,7 @@
 @use "../../scss/variable";
 
+$checkbox-width: 40px;
+
 .file-container {
   height: 100%;
   min-height: 400px;
@@ -59,8 +61,15 @@
   }
 
   tbody {
-    tr:not(.active) {
+    td:first-child {
+      width: $checkbox-width;
+    }
+
+    td:nth-child(2) {
       cursor: pointer;
+    }
+
+    tr:not(.active) {
       &:hover {
         background: variable.$theme-hover;
       }
@@ -88,6 +97,7 @@
   // TODO: height 100%
   display: flex;
   justify-content: center;
+
   > div {
     display: flex;
     flex-flow: column;

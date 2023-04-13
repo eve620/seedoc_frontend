@@ -2,10 +2,11 @@ import "./style.scss"
 import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 import {formatBytes, getFileType} from "../../utils";
 import Icon from "../Icon/Icon"
+import {Checkbox} from "antd";
 
 export type Props = {
   data: File[],
-  onDoubleClick?: (file: File) => void,
+  onClick?: (file: File) => void,
   onChange?: (active: Set<File>) => void
 }
 
@@ -34,16 +35,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     },
     reset
   }));
-  const reset = () => {
-    const active = new Set<File>()
-    setActive(active)
-    props.onChange&& props.onChange(active);
-  }
-  useEffect(() => {
-    reset()
-  },[props.data])
-
-  const onClick = (data: File) => {
+  const select = (data: File) => {
     // 选中和反选择
     if (active.has(data)) {
       active.delete(data)
@@ -54,16 +46,24 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     setActive(new Set<File>(active))
     props.onChange && props.onChange(active)
   }
-  const onDoubleClick = (data: File) => {
-    if (props.onDoubleClick) {
-      props.onDoubleClick(data)
-    }
+  const reset = () => {
+    const active = new Set<File>()
+    setActive(active)
+    props.onChange&& props.onChange(active);
+  }
+  useEffect(() => {
+    reset()
+  },[props.data])
+
+  const onClick = (data: File) => {
+    props.onClick && props.onClick(data)
   }
   return (
     <>
       <table className="file-table" cellSpacing={0}>
         <thead>
         <tr>
+          <th></th>
           <th>文件名称</th>
           <th>文件大小</th>
           <th>文件类型</th>
@@ -74,10 +74,10 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
         <tbody>
         {props.data.map((data) => {
           return (<tr
-            onClick={() => onClick(data)} key={data.name}
-            onDoubleClick={() => onDoubleClick(data)}
+            key={data.name}
             className={isActive(active, data.name) ? "active" : ""}>
-            <td>{data.name}</td>
+            <td><Checkbox onClick={()=> select(data)}/></td>
+            <td onClick={() => onClick(data)}>{data.name}</td>
             <td>{formatBytes(data.size)}</td>
             <td>{getFileType(data.type)}</td>
             <td>{data.uploader}</td>
