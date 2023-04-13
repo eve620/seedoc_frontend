@@ -35,7 +35,7 @@ export default () => {
     <div className="login">
       <div className="display">
         <div>
-          <h1>年度审核资料管理系统</h1>
+          <h1>本科教学文件管理系统</h1>
           <h2>西安电子科技大学</h2>
           <div>
             <li>安全</li>
