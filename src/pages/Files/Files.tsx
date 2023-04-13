@@ -1,4 +1,4 @@
-import Files, {File, Handler as FileHandler} from "../../component/Files/Files"
+import Files, {Handler as FileHandler} from "../../component/Files/Files"
 import type {File as FileProps} from "../../component/Files/Files";
 import Buttom from "../../component/Button/Button";
 import {getInstance} from "../../sdk/Instance";
@@ -6,24 +6,29 @@ import Paths from "../../component/Paths/Paths";
 import Pop from "../../component/Pop/Pop"
 import React, {useEffect, useRef, useState} from "react";
 import {FileInfo} from "../../sdk/Types";
-// import {Error} from "../../sdk/Types"
 import {Modal} from "antd";
 import Input, {Handler as InputHandler} from "../../component/Input/Input";
 import {canWrite, isValidFilename, pathJoin} from "../../utils";
-import {toLogin} from "../../router";
-import paths from "../../component/Paths/Paths";
-import {types} from "sass";
-import String = types.String;
+import {toMain} from "../../router";
+import {useNavigate, useParams} from "react-router-dom";
+
+const getPath = () => {
+  let path = useParams().path
+  return path == undefined ? "" : path
+}
 
 export default () => {
+  const path = getPath()
   const instance = getInstance()
-  const [paths, setPaths] = useState("")
+  const navigate = useNavigate()
   const [file, setFiles] = useState<FileProps[]>([])
   const fileList = useRef<FileHandler>(null);
-
   // 文件更新与内容展示
+  const setPath  =(path: string) => {
+    toMain(navigate, path)
+  }
   const refreshDir = () => {
-    instance.list(paths).then(res => {
+    instance.list(path).then(res => {
       const files: FileProps[] = []
       const promises = new Array<Promise<any>>()
       res.forEach(file => {
@@ -39,7 +44,7 @@ export default () => {
 
   useEffect(() => {
     refreshDir()
-  }, [paths])
+  },[path])
 
   // 创建文件夹
   const [isNewDirOpen, setIsNewDirOpen] = useState(false)
@@ -56,7 +61,7 @@ export default () => {
       Pop({message: "文件夹名称不规范"})
       return
     }
-    instance.createDir(pathJoin(paths, dirName)).then(() => {
+    instance.createDir(pathJoin(path, dirName)).then(() => {
       newDirName.current!.reset()
       refreshDir()
     }).catch(errHandler)
@@ -75,8 +80,7 @@ export default () => {
     if (!file) {
       return
     }
-    console.log(paths)
-    instance.upload(paths, file).do().then((res: string) => {
+    instance.upload(path, file).do().then((res: string) => {
       refreshDir()
       return Pop({message: "上传成功"})
     }).catch(err => {
@@ -88,12 +92,12 @@ export default () => {
   const downloadOrOpen = (file: FileProps) => {
     // 大卡文件夹
     if (file.type == "dir") {
-      const newPath = paths.length == 0 ? file.name : paths + "/" + file.name
-      setPaths(newPath)
+      const newPath = path.length == 0 ? file.name : path + "/" + file.name
+      toMain(navigate, newPath)
       return
     }
     // 否则下载文件
-    getInstance().objectByPath(pathJoin(paths, file.name)).then(res => window.open(res))
+    getInstance().objectByPath(pathJoin(path, file.name)).then(res => window.open(res))
   }
   const batchDownload = () => {
     const active = fileList.current!.active()
@@ -102,7 +106,7 @@ export default () => {
       if (value.type == "dir") {
         return
       }
-      instance.objectByPath(pathJoin(paths, value.name)).then((url) => {
+      instance.objectByPath(pathJoin(path, value.name)).then((url) => {
         window.open(url)
       })
     })
@@ -114,7 +118,7 @@ export default () => {
     // TODO: POP message to user
     const promises = new Array<Promise<void>>();
     active.forEach(value => {
-      promises.push(getInstance().objectDelete(pathJoin(paths, value.name)))
+      promises.push(getInstance().objectDelete(pathJoin(path, value.name)))
     })
     Promise.all(promises).then(res => {
       refreshDir()
@@ -140,8 +144,7 @@ export default () => {
     if (!isValidFilename(newName)) {
       return Pop({message: "无效的文件名"})
     }
-    console.log(active, newName, paths)
-    instance.rename(pathJoin(paths, active.name), pathJoin(paths, newName)).then(() => {
+    instance.rename(pathJoin(path, active.name), pathJoin(path, newName)).then(() => {
       setIsModifyDirNameActive(false)
       refreshDir()
       return Pop({message: "修改成功"})
@@ -157,7 +160,7 @@ export default () => {
   const onSetRegister = (type: Register['type']) => {
     register = {
       type: type,
-      path: paths,
+      path: path,
       active: fileList.current!.active()
     }
     setRegister(register)
@@ -173,7 +176,7 @@ export default () => {
     }
     const promises = new Array<Promise<any>>()
     register.active.forEach((file) => {
-      promises.push(instance.rename(pathJoin(register!.path, file.name), pathJoin(paths, file.name)))
+      promises.push(instance.rename(pathJoin(register!.path, file.name), pathJoin(path, file.name)))
     })
     Promise.all(promises).then(res => {
       refreshDir()
@@ -191,7 +194,7 @@ export default () => {
   const fileSelectedChange = (selected: Set<FileProps>) => {
     setIsDownloadShow(selected && selected.size > 0)
     instance.whoami().then(res => {
-      if (!res || !canWrite(paths,res.permission)) {
+      if (!res || !canWrite(path, res.permission)) {
         setIsUploadShow(false)
         setIsCreateDirShow(false)
         setIsDeleteShow(false)
@@ -204,8 +207,8 @@ export default () => {
       setIsPasteShow(register != undefined)
       setIsRenameShow(selected && selected.size == 1)
       setIsDeleteShow(selected && selected.size > 0)
-      setIsUploadShow(canWrite(paths, res.permission))
-      setIsCreateDirShow(canWrite(paths, res.permission))
+      setIsUploadShow(canWrite(path, res.permission))
+      setIsCreateDirShow(canWrite(path, res.permission))
     })
   }
 
@@ -220,7 +223,7 @@ export default () => {
       </Modal>
       <div className="file-container">
         <div className="file-menus">
-          <Paths path={paths} onPathChange={setPaths}/>
+          <Paths path={path} onPathChange={setPath}/>
           <div className="flex-spacer"></div>
           <div className="button-groups">
             <input onChange={onUploadFileChange} ref={fileInput} type="file" id="file-input" style={{display: "none"}}/>

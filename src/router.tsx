@@ -14,8 +14,8 @@ export const toManage = (navigate: NavigateFunction) => {
   return navigate("/manage")
 }
 
-export const toMain =(navigate: NavigateFunction) => {
-  navigate("/file")
+export const toMain = (navigate: NavigateFunction, path?: string) => {
+  navigate("/file/" + (path ? path : ""))
 }
 
 export const router = createBrowserRouter([
@@ -24,11 +24,11 @@ export const router = createBrowserRouter([
     element: <Login/>,
   },
   {
-    path:"/",
+    path: "/",
     element: <Redirect></Redirect>
   },
   {
-    path: "/file",
+    path: "/file/:path?",
     element: <><TopBar/><Files/></>,
   },
   {
