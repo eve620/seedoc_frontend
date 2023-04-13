@@ -41,10 +41,13 @@ export function getFileType(mimeType: string): string {
   if (mimeType.indexOf("image") == 0) {
     return "图片"
   }
+  if (mimeType == "application/vnd.ms-powerpoint") {
+    return "PPT"
+  }
   if (mimeType == "dir") {
     return "文件夹"
   }
-  return mimeType
+  return "文件"
 }
 
 export function canWrite(path:string, permission:string) {

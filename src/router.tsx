@@ -1,14 +1,21 @@
 import Login from "./pages/Login/Login"
-import {createBrowserRouter, NavigateFunction} from "react-router-dom";
+import {createBrowserRouter, Navigate, NavigateFunction, useNavigate} from "react-router-dom";
 import TopBar from "./pages/TopBar/TopBar";
 import Files from "./pages/Files/Files";
+import Manage from "./pages/Manage/Manage";
+import {getInstance} from "./sdk/Instance";
+import Redirect from "./pages/Redirect";
 
 export const toLogin = (navigate: NavigateFunction) => {
   navigate("/login")
 }
 
+export const toManage = (navigate: NavigateFunction) => {
+  return navigate("/manage")
+}
+
 export const toMain =(navigate: NavigateFunction) => {
-  navigate("/")
+  navigate("/file")
 }
 
 export const router = createBrowserRouter([
@@ -17,7 +24,15 @@ export const router = createBrowserRouter([
     element: <Login/>,
   },
   {
-    path: "/",
+    path:"/",
+    element: <Redirect></Redirect>
+  },
+  {
+    path: "/file",
     element: <><TopBar/><Files/></>,
+  },
+  {
+    path: "/manage",
+    element: <><TopBar/><Manage/></>,
   }
 ])
