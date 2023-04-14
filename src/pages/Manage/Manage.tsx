@@ -140,8 +140,9 @@ export default () => {
   return <div className="app-container">
     <Modal title={userForm?.title} open={isUserFormShow} onOk={userFormOk} onCancel={userFormCancel}>
       <form className="form">
-        <div><span>工号</span></div>
-        <Input size={"small"} type={"text"} value={userForm?.id} onChange={(id) => setUserForm({...userForm!, id})}/>
+        {userForm?.title == "添加用户" && <div><span>工号</span></div>}
+        {userForm?.title == "添加用户" && <Input size={"small"} type={"text"} value={userForm?.id}
+                                                 onChange={(id) => setUserForm({...userForm!, id})}/>}
         <div><span>用户名</span></div>
         <Input size={"small"} type={"text"} value={userForm?.name}
                onChange={(name) => setUserForm({...userForm!, name})}/>
