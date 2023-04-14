@@ -37,7 +37,10 @@ export function formatBytes(byteLen: number): string {
   return Math.ceil(byteLen * 100) / 100 + " " + units[index];
 }
 
-export function getFileType(mimeType: string): string {
+export function getFileType(mimeType?: string): string {
+  if (!mimeType) {
+    return "未知"
+  }
   if (mimeType.indexOf("image") == 0) {
     return "图片"
   }

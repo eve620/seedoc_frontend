@@ -1,4 +1,4 @@
-import Files, {Handler as FileHandler} from "../../component/Files/Files"
+import Files, {File, Handler as FileHandler} from "../../component/Files/Files"
 import type {File as FileProps} from "../../component/Files/Files";
 import Buttom from "../../component/Button/Button";
 import {getInstance} from "../../sdk/Instance";
@@ -24,27 +24,30 @@ export default () => {
   const [file, setFiles] = useState<FileProps[]>([])
   const fileList = useRef<FileHandler>(null);
   // 文件更新与内容展示
-  const setPath  =(path: string) => {
+  const setPath = (path: string) => {
     toMain(navigate, path)
   }
   const refreshDir = () => {
     instance.list(path).then(res => {
+      // 收集所有files的id
+      const users = collectionUsers(res)
       const files: FileProps[] = []
-      const promises = new Array<Promise<any>>()
-      res.forEach(file => {
-        promises.push(instance.user(file.owner).then(res => {
-          const file_ = fileInfoToFileProps(file)
-          file_.uploader = res.name
-          files.push(file_)
-        }))
+      // 列出所有用户
+      return getInstance().userList(users).then(users => {
+        res.forEach(file => {
+          const f = fileInfoToFileProps(file)
+          const user=  users.get(file.owner)
+          f.uploader = user ? user.name : "已删除用户"
+          files.push(f)
+        })
+        setFiles(files)
       })
-      Promise.all(promises).then(() => setFiles(files))
     }).catch(error => console.error(error))
   }
 
   useEffect(() => {
     refreshDir()
-  },[path])
+  }, [path])
 
   // 创建文件夹
   const [isNewDirOpen, setIsNewDirOpen] = useState(false)
@@ -261,4 +264,17 @@ type Register = {
   type: "copy" | "cut"
   path: string
   active: Set<FileProps>
+}
+
+const collectionUsers = (files: FileInfo[]): string[] => {
+  const result = new Set<string>()
+  for (const file of files) {
+    result.add(file.owner)
+  }
+  // TODO: 如何快速从 Set 到 Array？
+  const r = new Array<string>()
+  result.forEach(id => {
+    r.push(id)
+  })
+  return r
 }
