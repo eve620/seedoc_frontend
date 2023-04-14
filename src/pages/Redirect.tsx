@@ -6,6 +6,6 @@ export default () => {
   const navigate = useNavigate()
   useEffect(() => {
     toLogin(navigate)
-  })
+  },[])
   return <></>
 }

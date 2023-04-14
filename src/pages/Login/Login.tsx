@@ -18,7 +18,7 @@ export default () => {
         toMain(navigate)
       }
     })
-  })
+  },[])
   const onLogin = () => {
     const uname = username.current ? username.current.value() : undefined
     const pwd = password.current ? password.current.value() : undefined

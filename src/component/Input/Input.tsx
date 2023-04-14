@@ -4,7 +4,8 @@ import {useImperativeHandle, forwardRef, useRef, HTMLInputTypeAttribute} from "r
 export type Props = {
   size: "large" | "small"
   type: HTMLInputTypeAttribute
-  placeHolder: string
+  value?: string
+  placeHolder?: string
   onChange?: (text: string) => void
 }
 
@@ -24,6 +25,6 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     }
   }));
   return <div className="input-container">
-    <input type={props.type} className={props.size} placeholder={props.placeHolder} ref={input} onChange={(event) => props.onChange && props.onChange(event.target.value)}/>
+    <input value={props.value} type={props.type} className={props.size} placeholder={props.placeHolder} ref={input} onChange={(event) => props.onChange && props.onChange(event.target.value)}/>
   </div>
 })
