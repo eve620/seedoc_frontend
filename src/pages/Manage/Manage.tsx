@@ -156,7 +156,7 @@ export default () => {
       </form>
     </Modal>
     <div className="menu-group">
-      <Button onClick={() => openUserForm("添加用户")} icon={"create"} text={"添加用户"}></Button>
+      <Button onClick={() => openUserForm("添加用户")} icon={"addUser"} text={"添加用户"}></Button>
     </div>
     <Table dataSource={userData} rowKey={"id"} columns={columns(userDelete, openUserForm)}></Table>
   </div>
