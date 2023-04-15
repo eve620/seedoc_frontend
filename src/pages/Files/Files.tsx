@@ -72,25 +72,6 @@ export default () => {
   }
   const onCreateDirCancel = () => setIsNewDirOpen(false)
 
-  // 文件上传
-  const fileInput = useRef<HTMLInputElement>(null);
-  const uploadFile = () => {
-    fileInput.current && fileInput.current.click()
-  }
-  const onUploadFileChange = () => {
-    const input = fileInput.current!
-    const file = input.files ? (input.files.length > 0 ? input.files[0] : undefined) : undefined
-    if (!file) {
-      return
-    }
-    instance.upload(path, file).do().then((res: string) => {
-      refreshDir()
-      return Pop({message: "上传成功"})
-    }).catch(err => {
-      return Pop({message: "上传失败:" + err})
-    })
-  }
-
   // 文件下载
   const downloadOrOpen = (file: FileProps) => {
     // 大卡文件夹
@@ -224,13 +205,13 @@ export default () => {
           <Paths path={path} onPathChange={setPath}/>
           <div className="flex-spacer"></div>
           <div className="button-groups">
-            <input onChange={onUploadFileChange} ref={fileInput} type="file" id="file-input" style={{display: "none"}}/>
+            {/*<input onChange={onUploadFileChange} ref={fileInput} type="file" id="file-input" style={{display: "none"}}/>*/}
             {isDeleteShow && <Buttom text="删除" onClick={() => deleteObject()} icon="trash"/>}
             {isRenameShow && <Buttom text="重命名" onClick={() => onModifyClick()} icon="modify"/>}
             {isCutShow && <Buttom text="剪切" onClick={() => onSetRegister("cut")} icon={"cut"}/>}
             {isPasteShow && <Buttom text="粘贴" onClick={() => onPaste()} icon={"paste"}/>}
             {isDownloadShow && <Buttom text="下载" onClick={() => batchDownload()} icon="download"/>}
-            {isUploadShow && <Buttom text="上传" icon="upload" onClick={uploadFile}/>}
+            {/*{isUploadShow && <Buttom text="上传" icon="upload" onClick={uploadFile}/>}*/}
             {isCreateDirShow && <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="create"/>}
           </div>
         </div>
