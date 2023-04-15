@@ -31,6 +31,10 @@ export default () => {
       })
     }).catch(err => Pop({message: err.message}))
   }
+
+  const onLoginCas = () => {
+    return getInstance().loginCas()
+  }
   return (
     <div className="login">
       <div className="display">
@@ -55,7 +59,7 @@ export default () => {
             <div onClick={onLogin} className="login-button">
               <span>登录</span>
             </div>
-            <div className="login-button">
+            <div onClick={onLoginCas} className="login-button">
               <span>统一认证登录</span>
             </div>
           </div>
