@@ -104,15 +104,10 @@ export default () => {
   }
   const batchDownload = () => {
     const active = fileList.current!.active()
+    const paths = new Array<string>()
+    active.forEach(file => paths.push(pathJoin(path,file.name)))
     // 排除所有文件夹
-    active.forEach(value => {
-      if (value.type == "dir") {
-        return
-      }
-      instance.objectByPath(pathJoin(path, value.name)).then((url) => {
-        window.open(url)
-      })
-    })
+    getInstance().objectArchiveUrl(paths).then(window.open)
   }
 
   // 文件删除
