@@ -76,8 +76,7 @@ $checkbox-width: 40px;
     }
 
     .active {
-      background-color: #51afde;
-      color: variable.$theme-light;
+      background-color: variable.$theme-hover;
     }
 
     td {
