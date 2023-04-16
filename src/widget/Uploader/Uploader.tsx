@@ -4,8 +4,7 @@ import {getInstance} from "../../sdk/Instance";
 import {Modal, Progress} from "antd";
 import Icon from "../../component/Icon/Icon";
 import "./style.scss";
-import {Simulate} from "react-dom/test-utils";
-import {formatBytes} from "../../utils";
+import {deletePrefixSlash, formatBytes, pathJoin} from "../../utils";
 
 export type Handler = {
   active(path: string): void
@@ -27,23 +26,43 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
   // 清理浏览器默认行为
   const inputArea = useRef<HTMLDivElement>(null)
   const fileInput = useRef<HTMLInputElement>(null);
-  const [selected, setSelected] = useState(new Map<string, Entry>([
-    ["testDir", {name: "一个测试文件夹但是他的名字非常非常的长以至于需要折叠", type: "dir", size: 1000, children: new Map<String, File | null>()}],
-    ["testFile", {name: "一个测试文件", type: "file", size: 1000, children: new Map<String, File | null>()}]
-  ]));
+  const [selected, setSelected] = useState(new Map<string, Entry>());
 
   // 文件上传
   const uploadFile = () => {
     fileInput.current && fileInput.current.click()
   }
   const onUpload = () => {
+    if (selected.size == 0) {
+      return Pop({message:"至少上传一个文件"})
+    }
     setIsUploadEnabled(false)
-    // const input = fileInput.current!
-    // const file = input.files ? (input.files.length > 0 ? input.files[0] : undefined) : undefined
-    // if (!file) {
-    //   return
-    // }
-    // getInstance().upload(path, file).do().then((res: string) => {
+    const instance = getInstance()
+    let progress = 0;
+    // 开始上传所有文件
+    const errorHandler = (err: any) => {
+      return Pop({message: err.message})
+    }
+    const successHandler = () => {
+      progress++
+    }
+    const promises = new Array<Promise<void>>()
+    selected.forEach(entry => {
+      entry.children.forEach((value, key) => {
+        const filePath = pathJoin(path, key)
+        // 如果是文件夹
+        if (!value) {
+          return promises.push(instance.createDir(filePath).catch(errorHandler).then(successHandler))
+        }
+        // 如果是文件
+        return promises.push(instance.upload(filePath, value).do().catch(errorHandler).then(successHandler))
+      })
+    })
+    Promise.all(promises).then(res => {
+      setActive(false)
+      setIsUploadEnabled(true)
+    })
+    // getInstance().upload(path, ).do().then((res: string) => {
     //   return Pop({message: "上传成功"})
     // }).catch(err => {
     //   return Pop({message: "上传失败:" + err})
@@ -73,6 +92,15 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
   const onCancel = () => {
     setActive(false)
     setIsUploadEnabled(true)
+    setSelected(new Map())
+  }
+
+  // 使用更加节约空间的方法
+  const removeSelected = (key: string) => {
+    selected.delete(key)
+    const newMap = new Map<string, Entry>()
+    selected.forEach((value, key1) => newMap.set(key, value))
+    setSelected(newMap)
   }
 
   const result: ReactNode[] = []
@@ -81,7 +109,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
       <span>{value.name}</span>
       <span>{formatBytes(value.size)}</span>
       <span>{value.type == "dir" ? "文件夹" : "文件"}</span>
-      <Icon icon={"close"} size={16}></Icon>
+      {uploadEnabled && <Icon icon={"close"} size={16} onClick={() => removeSelected(key)}></Icon>}
     </div>)
   })
 
@@ -115,16 +143,17 @@ function preventDefaults<T extends React.DragEvent>(callback?: (e: T) => void) {
 }
 
 async function readDirOrFiles(entry: FileSystemEntry, result: Map<string, File | null>): Promise<void> {
+  const path = deletePrefixSlash(entry.fullPath)
   if (entry.isFile) {
     return new Promise(resolve => {
       (entry as FileSystemFileEntry).file(file => {
-        result.set(entry.fullPath, file)
+        result.set(path, file)
         resolve();
       })
     })
   }
   // 如果是文件夹，则进一步深入
-  result.set(entry.fullPath, null)
+  result.set(path, null)
   const reader = (entry as FileSystemDirectoryEntry).createReader()
   // 读取所有内容
   const promises = new Array<Promise<void>>()
@@ -133,12 +162,12 @@ async function readDirOrFiles(entry: FileSystemEntry, result: Map<string, File |
       if (entry.isFile) {
         promises.push(new Promise(resolve => {
           (entry as FileSystemFileEntry).file(file => {
-            result.set(entry.fullPath, file)
+            result.set(deletePrefixSlash(entry.fullPath), file)
             resolve()
           })
         }))
       }
-      promises.push(readDirOrFiles(entry,result))
+      promises.push(readDirOrFiles(entry, result))
     })
   })) {
   }
@@ -154,9 +183,19 @@ function recordEntry(reader: FileSystemDirectoryReader, callback: FileSystemEntr
   })
 }
 
+// const testData = new Map<string, Entry>([
+//   ["testDir", {
+//     name: "一个测试文件夹但是他的名字非常非常的长以至于需要折叠",
+//     type: "dir",
+//     size: 1000,
+//     children: new Map<String, File | null>()
+//   }],
+//   ["testFile", {name: "一个测试文件", type: "file", size: 1000, children: new Map<String, File | null>()}]
+// ])
+
 type Entry = {
   name: string,
   type: "file" | "dir",
   size: number,
-  children: Map<String, File | null>;
+  children: Map<string, File | null>;
 }

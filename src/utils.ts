@@ -9,6 +9,10 @@ export function pathJoin(dir: string, file: string) {
   return dir + "/" + file
 }
 
+export function deletePrefixSlash(str: string): string {
+  return str.indexOf("/") == 0 ? str.substring(1) : str
+}
+
 // 将毫秒转换为时间字符串
 export function toFormatString(millisec: number): string {
   const date = new Date(millisec);
@@ -53,9 +57,9 @@ export function getFileType(mimeType?: string): string {
   return "文件"
 }
 
-export function canWrite(path:string, permission:string) {
+export function canWrite(path: string, permission: string) {
   if (permission.slice(-1) == "/") {
-    permission = permission.slice(0,-1)
+    permission = permission.slice(0, -1)
   }
   return path.indexOf(permission) == 0
 }

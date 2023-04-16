@@ -36,8 +36,9 @@ const icons: Map<Icon, string> = new Map<Icon, string>([
   ["addUser", AddUser],
   ["close", Close],
 ])
-export default (props: { icon: Icon, size: number }) => {
+export default (props: { icon: Icon, size: number, onClick?: () => void }) => {
   return (
-    <img src={icons.get(props.icon)} alt={props.icon} style={{width: `${props.size}px`, height: `${props.size}px`}}/>
+    <img onClick={() => props.onClick && props.onClick()} src={icons.get(props.icon)} alt={props.icon}
+         style={{width: `${props.size}px`, height: `${props.size}px`}}/>
   )
 }
