@@ -11,6 +11,7 @@ import Input, {Handler as InputHandler} from "../../component/Input/Input";
 import {canWrite, isValidFilename, pathJoin} from "../../utils";
 import {toMain} from "../../router";
 import {useNavigate, useParams} from "react-router-dom";
+import Uploader, {Handler} from "../../widget/Uploader/Uploader";
 
 const getPath = () => {
   let path = useParams().path
@@ -191,9 +192,15 @@ export default () => {
     })
   }
 
+  // 文件上传控制
+  const uploader = useRef<Handler>(null);
+  const onUpload = () => {
+    uploader.current && uploader.current.active(path);
+  }
 
   return (
     <div className="app-container">
+      <Uploader onSuccess={refreshDir} ref={uploader}/>
       <Modal title="新建文件夹" open={isNewDirOpen} onOk={onCreateDirOk} onCancel={onCreateDirCancel}>
         <Input size={"small"} type={"text"} placeHolder={"文件夹名称"} ref={newDirName}/>
       </Modal>
@@ -205,13 +212,12 @@ export default () => {
           <Paths path={path} onPathChange={setPath}/>
           <div className="flex-spacer"></div>
           <div className="button-groups">
-            {/*<input onChange={onUploadFileChange} ref={fileInput} type="file" id="file-input" style={{display: "none"}}/>*/}
             {isDeleteShow && <Buttom text="删除" onClick={() => deleteObject()} icon="trash"/>}
             {isRenameShow && <Buttom text="重命名" onClick={() => onModifyClick()} icon="modify"/>}
             {isCutShow && <Buttom text="剪切" onClick={() => onSetRegister("cut")} icon={"cut"}/>}
             {isPasteShow && <Buttom text="粘贴" onClick={() => onPaste()} icon={"paste"}/>}
             {isDownloadShow && <Buttom text="下载" onClick={() => batchDownload()} icon="download"/>}
-            {/*{isUploadShow && <Buttom text="上传" icon="upload" onClick={uploadFile}/>}*/}
+            {isUploadShow && <Buttom text="上传" icon="upload" onClick={onUpload}/>}
             {isCreateDirShow && <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="create"/>}
           </div>
         </div>
