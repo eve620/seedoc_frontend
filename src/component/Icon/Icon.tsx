@@ -8,21 +8,34 @@ import Empty from "./icons/empty.svg"
 import Paste from "./icons/paste.svg"
 import AddUser from "./icons/adduser.svg"
 import Cut from "./icons/cut.svg"
+import Close from "./icons/close.svg"
 
-export type Icon = "upload" | "download" | "trash" | "share" | "create" | "modify" | "empty" | "paste" | "cut" | "addUser"
+export type Icon =
+  "upload"
+  | "download"
+  | "trash"
+  | "share"
+  | "create"
+  | "modify"
+  | "empty"
+  | "paste"
+  | "cut"
+  | "addUser"
+  | "close"
 
-const icons: Map<Icon, string> = new Map<Icon, string>()
-icons.set("upload", Upload)
-icons.set("download", Download)
-icons.set("trash", Trash)
-icons.set("share", Share)
-icons.set("create", Create)
-icons.set("cut", Cut)
-icons.set("modify", Modify)
-icons.set("empty", Empty)
-icons.set("paste", Paste)
-icons.set("addUser", AddUser)
-
+const icons: Map<Icon, string> = new Map<Icon, string>([
+  ["upload", Upload],
+  ["download", Download],
+  ["trash", Trash],
+  ["share", Share],
+  ["create", Create],
+  ["cut", Cut],
+  ["modify", Modify],
+  ["empty", Empty],
+  ["paste", Paste],
+  ["addUser", AddUser],
+  ["close", Close],
+])
 export default (props: { icon: Icon, size: number }) => {
   return (
     <img src={icons.get(props.icon)} alt={props.icon} style={{width: `${props.size}px`, height: `${props.size}px`}}/>

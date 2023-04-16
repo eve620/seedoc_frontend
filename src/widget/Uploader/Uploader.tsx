@@ -28,7 +28,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
   const inputArea = useRef<HTMLDivElement>(null)
   const fileInput = useRef<HTMLInputElement>(null);
   const [selected, setSelected] = useState(new Map<string, Entry>([
-    ["testDir", {name: "一个测试文件夹", type: "dir", size: 1000, children: new Map<String, File | null>()}],
+    ["testDir", {name: "一个测试文件夹但是他的名字非常非常的长以至于需要折叠", type: "dir", size: 1000, children: new Map<String, File | null>()}],
     ["testFile", {name: "一个测试文件", type: "file", size: 1000, children: new Map<String, File | null>()}]
   ]));
 
@@ -81,12 +81,12 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
       <span>{value.name}</span>
       <span>{formatBytes(value.size)}</span>
       <span>{value.type == "dir" ? "文件夹" : "文件"}</span>
-      <Icon size={16} icon={"create"}></Icon>
+      <Icon icon={"close"} size={16}></Icon>
     </div>)
   })
 
   return (
-    <Modal title="上传文件" open={active} onOk={onUpload} onCancel={onCancel}>
+    <Modal title="上传文件" width={"80vw"} open={active} onOk={onUpload} onCancel={onCancel}>
       {uploadEnabled && <div onClick={uploadFile}
                              onDrop={preventDefaults((e) => onChange(e.dataTransfer.items))}
                              onDragOver={preventDefaults()}

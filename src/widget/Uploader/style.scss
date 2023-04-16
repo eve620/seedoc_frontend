@@ -9,9 +9,12 @@
 }
 
 .upload-file-item {
+  >:last-child {
+    cursor: pointer;
+  }
   height: 48px;
   border-bottom: 1px solid variable.$theme-border;
   display: grid;
-  align-content: center;
-  grid-template-columns: 1fr 100px 60px 60px;
+  align-items: center;
+  grid-template-columns: 1fr 100px 120px 32px;
 }
