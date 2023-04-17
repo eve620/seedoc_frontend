@@ -14,8 +14,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import Uploader, {Handler} from "../../widget/Uploader/Uploader";
 
 const getPath = () => {
-  let path = useParams().path
-  return path == undefined ? "" : path
+  let params = useParams()
+  return params["*"] == undefined ? "" : params["*"]
 }
 
 export default () => {

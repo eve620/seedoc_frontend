@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
     element: <Redirect></Redirect>
   },
   {
-    path: "/file/:path?",
+    path: "/file/*",
     element: <><TopBar/><Files/></>,
   },
   {

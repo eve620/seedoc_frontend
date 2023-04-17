@@ -4,7 +4,7 @@ import {getInstance} from "../../sdk/Instance";
 import {Modal, Progress} from "antd";
 import Icon from "../../component/Icon/Icon";
 import "./style.scss";
-import {deletePrefixSlash, formatBytes, pathJoin} from "../../utils";
+import {deletePrefixSlash, formatBytes, getParentPath, pathJoin} from "../../utils";
 
 export type Handler = {
   active(path: string): void
@@ -32,36 +32,35 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
   const uploadFile = () => {
     fileInput.current && fileInput.current.click()
   }
-  const onUpload = () => {
+  const onUpload = async () => {
     if (selected.size == 0) {
-      return Pop({message:"至少上传一个文件"})
+      return Pop({message: "至少上传一个文件"})
     }
     setIsUploadEnabled(false)
     const instance = getInstance()
     let progress = 0;
-    // 开始上传所有文件
-    const errorHandler = (err: any) => {
-      return Pop({message: err.message})
-    }
     const successHandler = () => {
       progress++
     }
-    const promises = new Array<Promise<void>>()
-    selected.forEach(entry => {
-      entry.children.forEach((value, key) => {
-        const filePath = pathJoin(path, key)
-        // 如果是文件夹
-        if (!value) {
-          return promises.push(instance.createDir(filePath).catch(errorHandler).then(successHandler))
+    try {
+      for (const [_, entry] of selected) {
+        for (const [key, value] of entry.children) {
+          // 如果是文件夹
+          if (!value) {
+            console.log("creating dir：" + key)
+            await instance.createDir(key)
+            continue
+          }
+          // 如果是文件
+          console.log("creating file：" + key)
+          await instance.upload(pathJoin(path, getParentPath(deletePrefixSlash(path))), value!).do()
         }
-        // 如果是文件
-        return promises.push(instance.upload(filePath, value).do().catch(errorHandler).then(successHandler))
-      })
-    })
-    Promise.all(promises).then(res => {
-      setActive(false)
-      setIsUploadEnabled(true)
-    })
+      }
+    } catch (err: any) {
+      return Pop({message: err.message})
+    }
+    setActive(false)
+    setIsUploadEnabled(true)
     // getInstance().upload(path, ).do().then((res: string) => {
     //   return Pop({message: "上传成功"})
     // }).catch(err => {
@@ -95,7 +94,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     setSelected(new Map())
   }
 
-  // 使用更加节约空间的方法
+// 使用更加节约空间的方法
   const removeSelected = (key: string) => {
     selected.delete(key)
     const newMap = new Map<string, Entry>()
