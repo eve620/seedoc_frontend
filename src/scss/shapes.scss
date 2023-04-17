@@ -1,8 +1,11 @@
 @mixin triangle ($size,$color,$rotation) {
+  content: '';
+  display: inline-block;
+  margin-left: 5px; /* 调整三角离span标签的距离 */
   width: 0;
   height: 0;
-  border-left: $size solid transparent;
-  border-right: $size solid transparent;
-  border-bottom: $size solid $color;
+  border-top: $size solid transparent;
+  border-right: $size solid $color;
+  border-bottom: $size solid transparent;
   transform: rotate($rotation);
 }

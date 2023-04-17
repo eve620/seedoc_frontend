@@ -1,11 +1,12 @@
 import "./style.scss"
 import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
-import {formatBytes, getFileType} from "../../utils";
+import {formatBytes, getFileType, orderByName, orderByTime, orderByType} from "../../utils";
 import Icon from "../Icon/Icon"
 import {Checkbox} from "antd";
 
 export type Props = {
   data: File[],
+  orderBy?: "name" | "name-reverse" | "type" | "created" | "created-reverse"
   onClick?: (file: File) => void,
   onChange?: (active: Set<File>) => void
 }
@@ -21,7 +22,7 @@ export type File = {
 
 export type Handler = {
   active: () => Set<File>
-  reset:() => void
+  reset: () => void
 }
 
 
@@ -29,12 +30,33 @@ export type Handler = {
 // 如果使用 onChange，那么不会调用click
 export default forwardRef<Handler, Props>((props: Props, ref) => {
   const [active, setActive] = useState(new Set<File>())
+  const [data, setData] = useState(props.data)
+  const [order, setOrder] = useState<Props["orderBy"]>("created");
   useImperativeHandle(ref, () => ({
     active: () => {
       return active;
     },
     reset
   }));
+  const reorder = () => {
+    let data: File[] = props.data
+    switch (order) {
+      case "name":
+        data = orderByName([...props.data])
+        break
+      case "name-reverse":
+        data = orderByName([...props.data], true)
+        break
+      case "created-reverse":
+        data = orderByTime([...props.data], true)
+        break
+      case "type":
+        data = orderByType([...props.data])
+    }
+    setData(data)
+    console.log("reoder finished", data, props.data, order)
+  }
+  useEffect(reorder, [order, props.data])
   const select = (data: File) => {
     // 选中和反选择
     if (active.has(data)) {
@@ -49,11 +71,11 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
   const reset = () => {
     const active = new Set<File>()
     setActive(active)
-    props.onChange&& props.onChange(active);
+    props.onChange && props.onChange(active);
   }
   useEffect(() => {
     reset()
-  },[props.data])
+  }, [props.data])
 
   const onClick = (data: File) => {
     props.onClick && props.onClick(data)
@@ -64,19 +86,25 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
         <thead>
         <tr>
           <th></th>
-          <th>文件名称</th>
+          <th className={order == "name" ? "asc" : (order == "name-reverse" ? "desc" : undefined)}
+              onClick={() => setOrder(order == "name" ? "name-reverse" : "name")}>文件名称
+          </th>
           <th>文件大小</th>
-          <th>文件类型</th>
+          <th className={order == "type" ? "asc" : undefined}
+              onClick={() => setOrder("type")}>文件类型
+          </th>
           <th>上传者</th>
-          <th>上传时间</th>
+          <th onClick={() => setOrder(order == "created" ? "created-reverse" : "created")}>
+            <div className={order == "created" ? "asc" : (order == "created-reverse" ? "desc" : undefined)}>上传时间</div>
+          </th>
         </tr>
         </thead>
         <tbody>
-        {props.data.map((data) => {
+        {data.map((data) => {
           return (<tr
             key={data.name}
             className={isActive(active, data.name) ? "active" : ""}>
-            <td><Checkbox onClick={()=> select(data)}/></td>
+            <td><Checkbox onClick={() => select(data)}/></td>
             <td onClick={() => onClick(data)}>{data.name}</td>
             <td>{formatBytes(data.size)}</td>
             <td>{getFileType(data.type)}</td>

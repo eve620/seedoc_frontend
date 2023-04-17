@@ -37,8 +37,9 @@ export default () => {
       return getInstance().userList(users).then(users => {
         res.forEach(file => {
           const f = fileInfoToFileProps(file)
-          const user=  users.get(file.owner)
+          const user = users.get(file.owner)
           f.uploader = user ? user.name : "已删除用户"
+          console.log(f)
           files.push(f)
         })
         setFiles(files)
@@ -87,7 +88,7 @@ export default () => {
   const batchDownload = () => {
     const active = fileList.current!.active()
     const paths = new Array<string>()
-    active.forEach(file => paths.push(pathJoin(path,file.name)))
+    active.forEach(file => paths.push(pathJoin(path, file.name)))
     // 排除所有文件夹
     getInstance().objectArchiveUrl(paths).then(window.open)
   }
@@ -199,7 +200,7 @@ export default () => {
   }
   const onUploadSuccess = () => {
     refreshDir()
-    return Pop({message:"上传成功"})
+    return Pop({message: "上传成功"})
   }
 
   return (
@@ -236,8 +237,8 @@ const fileInfoToFileProps = (file: FileInfo): FileProps => {
     id: file.etag,
     name: file.name,
     size: file.size,
+    created: file.created,
     type: file.contentType,
-    created: new Date(),
     uploader: file.owner
   }
 }

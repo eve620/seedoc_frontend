@@ -1,3 +1,5 @@
+import {File} from "./component/Files/Files";
+
 export function isValidFilename(file: string) {
   return file.length > 0 && !file.includes("/")
 }
@@ -9,9 +11,9 @@ export function pathJoin(dir: string, file: string) {
   return dir + "/" + file
 }
 
-export function getParentPath(path:string) {
+export function getParentPath(path: string) {
   const raw = path.split("/")
-  return raw.length <=1 ? "" : raw.slice(0,-1).join("/")
+  return raw.length <= 1 ? "" : raw.slice(0, -1).join("/")
 }
 
 export function deletePrefixSlash(str: string): string {
@@ -67,4 +69,32 @@ export function canWrite(path: string, permission: string) {
     permission = permission.slice(0, -1)
   }
   return path.indexOf(permission) == 0
+}
+
+// 进行排序
+export function orderByName(files: File[], desc?: boolean): File[] {
+  return files.sort((a, b): number => {
+    const res = a.name > b.name ? 1 : -1
+    return desc ? res : -res;
+  })
+}
+
+// 根据修改时间进行排序
+export function orderByTime(files: File[], desc?: boolean): File[] {
+  return files.sort((a, b): number => {
+    const result = a.created < b.created ? 1 : -1
+    console.log(a.created,b.created,result)
+    return desc ? result : -result;
+  })
+}
+
+// 根据类型进行排序
+export function orderByType(files: File[]): File[] {
+  return files.sort((a, b): number => {
+    if (a.type == b.type) {
+      return 0
+    }
+    // 如果是文件夹，则默认放到最签名
+    return a.type == "dir" ? -1 : 1
+  })
 }
