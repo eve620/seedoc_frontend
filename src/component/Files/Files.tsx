@@ -86,16 +86,17 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
         <thead>
         <tr>
           <th></th>
-          <th className={order == "name" ? "asc" : (order == "name-reverse" ? "desc" : undefined)}
-              onClick={() => setOrder(order == "name" ? "name-reverse" : "name")}>文件名称
+          <th className="sortable"
+              onClick={() => setOrder(order == "name" ? "name-reverse" : "name")}>
+            <span className={order == "name" ? "asc" : (order == "name-reverse" ? "desc" : undefined)}>文件名称</span>
           </th>
           <th>文件大小</th>
-          <th className={order == "type" ? "asc" : undefined}
-              onClick={() => setOrder("type")}>文件类型
+          <th  className="sortable" onClick={() => setOrder("type")}>
+            <span className={order == "type" ? "asc" : undefined}>文件类型</span>
           </th>
           <th>上传者</th>
-          <th onClick={() => setOrder(order == "created" ? "created-reverse" : "created")}>
-            <div className={order == "created" ? "asc" : (order == "created-reverse" ? "desc" : undefined)}>上传时间</div>
+          <th className="sortable" onClick={() => setOrder(order == "created" ? "created-reverse" : "created")}>
+            <span className={order == "created" ? "asc" : (order == "created-reverse" ? "desc" : undefined)}>上传时间</span>
           </th>
         </tr>
         </thead>

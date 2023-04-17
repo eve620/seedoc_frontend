@@ -52,6 +52,10 @@ $checkbox-width: 40px;
       border-bottom: 1px solid variable.$theme-border;
     }
 
+    .sortable {
+      cursor: pointer;
+    }
+
     .asc::after {
       content: '';
       display: inline-block;
