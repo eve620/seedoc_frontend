@@ -197,10 +197,14 @@ export default () => {
   const onUpload = () => {
     uploader.current && uploader.current.active(path);
   }
+  const onUploadSuccess = () => {
+    refreshDir()
+    return Pop({message:"上传成功"})
+  }
 
   return (
     <div className="app-container">
-      <Uploader onSuccess={refreshDir} ref={uploader}/>
+      <Uploader onSuccess={onUploadSuccess} ref={uploader}/>
       <Modal title="新建文件夹" open={isNewDirOpen} onOk={onCreateDirOk} onCancel={onCreateDirCancel}>
         <Input size={"small"} type={"text"} placeHolder={"文件夹名称"} ref={newDirName}/>
       </Modal>

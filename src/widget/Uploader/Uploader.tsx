@@ -14,7 +14,7 @@ export type Props = {
 }
 
 export default forwardRef<Handler, Props>((props: Props, ref) => {
-  const [active, setActive] = useState(true);
+  const [active, setActive] = useState(false);
   const [path, setPath] = useState("")
   const [uploadEnabled, setIsUploadEnabled] = useState(true)
   useImperativeHandle(ref, () => ({
@@ -27,6 +27,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
   const inputArea = useRef<HTMLDivElement>(null)
   const fileInput = useRef<HTMLInputElement>(null);
   const [selected, setSelected] = useState(new Map<string, Entry>());
+  const [progress,setProgress] = useState(0);
 
   // 文件上传
   const uploadFile = () => {
@@ -36,24 +37,29 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     if (selected.size == 0) {
       return Pop({message: "至少上传一个文件"})
     }
+    // 计算总共有多少个文件
+    let totalFiles = 0
+    for (const [_, entry] of selected) {
+      totalFiles += entry.children.size
+    }
     setIsUploadEnabled(false)
     const instance = getInstance()
     let progress = 0;
     const successHandler = () => {
       progress++
+      setProgress(Math.ceil(progress / totalFiles * 100))
     }
     try {
       for (const [_, entry] of selected) {
         for (const [key, value] of entry.children) {
+          const filePath = pathJoin(path,deletePrefixSlash(key))
           // 如果是文件夹
           if (!value) {
-            console.log("creating dir：" + key)
-            await instance.createDir(key)
+            await instance.createDir(filePath).then(successHandler)
             continue
           }
           // 如果是文件
-          console.log("creating file：" + key)
-          await instance.upload(pathJoin(path, getParentPath(deletePrefixSlash(path))), value!).do()
+          await instance.upload(getParentPath(filePath), value!).do().then(successHandler)
         }
       }
     } catch (err: any) {
@@ -61,11 +67,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     }
     setActive(false)
     setIsUploadEnabled(true)
-    // getInstance().upload(path, ).do().then((res: string) => {
-    //   return Pop({message: "上传成功"})
-    // }).catch(err => {
-    //   return Pop({message: "上传失败:" + err})
-    // })
+    props.onSuccess && props.onSuccess()
   }
   const onChange = (dataTransfer: DataTransferItemList) => {
     const promises = new Array<Promise<void>>()
@@ -121,11 +123,9 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
                              ref={inputArea}
       >
           <Icon size={32} icon={"upload"}></Icon>
-          <p>点击或拖动文件到此区域以上传</p>
-        {/* @ts-expect-error */}
-          <input onChange={onChange} style={{display: "none"}} type={"file"} multiple ref={fileInput}/>
+          <p>拖动文件到此区域以上传</p>
       </div>}
-      {!uploadEnabled && <Progress strokeLinecap="butt" percent={75}/>}
+      {!uploadEnabled && <Progress strokeLinecap="butt" percent={progress}/>}
       <div className="upload-file-list">
         {result}
       </div>

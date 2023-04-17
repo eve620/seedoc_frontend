@@ -9,6 +9,11 @@ export function pathJoin(dir: string, file: string) {
   return dir + "/" + file
 }
 
+export function getParentPath(path:string) {
+  const raw = path.split("/")
+  return raw.length <=1 ? "" : raw.slice(0,-1).join("/")
+}
+
 export function deletePrefixSlash(str: string): string {
   return str.indexOf("/") == 0 ? str.substring(1) : str
 }
