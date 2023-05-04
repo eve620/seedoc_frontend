@@ -40,12 +40,6 @@ export default () => {
       <div className="display">
         <div>
           <h1>本科教学文件管理系统</h1>
-          <h2>西安电子科技大学</h2>
-          <div>
-            <li>安全</li>
-            <li>可靠</li>
-            <li>方便</li>
-          </div>
         </div>
       </div>
       <div className="login-form-container">

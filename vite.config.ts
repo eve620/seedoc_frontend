@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': "https://disk.shining.moe:9090/"
+      '/api': "https://seedoc.xidian.edu.cn/"
     }
   }
 })
