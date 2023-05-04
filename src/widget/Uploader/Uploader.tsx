@@ -1,4 +1,4 @@
-import React, {forwardRef, ReactNode, useEffect, useImperativeHandle, useRef, useState} from "react";
+import React, {ChangeEvent, forwardRef, ReactNode, useEffect, useImperativeHandle, useRef, useState} from "react";
 import Pop from "../../component/Pop/Pop";
 import {getInstance} from "../../sdk/Instance";
 import {Modal, Progress} from "antd";
@@ -104,6 +104,11 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     setSelected(newMap)
   }
 
+  // const inputElement = useRef<HTMLInputElement>(null)
+  const inputElementChange = (event: ChangeEvent) => {
+    console.log(event.target)
+  }
+
   const result: ReactNode[] = []
   selected.forEach((value, key) => {
     result.push(<div key={key} className="upload-file-item">
@@ -129,6 +134,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
       <div className="upload-file-list">
         {result}
       </div>
+      <input ref={fileInput} type="file" onChange={inputElementChange}  accept="" directory="directory" webkitdirectory="webkitdirectory" multiple="multiple" style={{display: "none"}}/>
     </Modal>
   )
 })
