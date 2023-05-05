@@ -1,0 +1,39 @@
+@use "../../scss/variable";
+
+.container {
+  h1 {
+    font: variable.$theme-font-display;
+  }
+
+  h2 {
+    font: variable.$theme-font-title;
+  }
+
+  height: 100vh;
+  background-color: variable.$theme-primary;
+  min-width: 800px;
+  color: variable.$theme-light;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+}
+.browsers {
+  margin-top: 24px;
+  display: flex;
+  gap: 48px;
+  > div {
+    cursor: pointer;
+    gap: 12px;
+    display: flex;
+    align-items: center;
+  }
+  span {
+    font-size: 16px;
+    font-family: variable.$theme-font-family;
+  }
+}

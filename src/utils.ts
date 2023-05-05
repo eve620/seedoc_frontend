@@ -98,3 +98,9 @@ export function orderByType(files: File[]): File[] {
     return a.type == "dir" ? -1 : 1
   })
 }
+
+export function isBrowserSupport():boolean {
+  const explorer = window.navigator.userAgent ;
+  console.log(explorer);
+  return explorer.indexOf("Chrome") >= 0 || explorer.includes("Safari");
+}

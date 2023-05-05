@@ -4,9 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>本科教学文件管理系统</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <script>
+        document.getElementById("chrome").onclick = function () {
+          window.open("https://www.google.cn/chrome/")
+        }
+        document.getElementById("edge").onclick = function () {
+          window.open("https://www.microsoft.com/zh-cn/edge")
+        }
+      </script>
+      <div class="container">
+        <div>
+          <h1>:( 出错啦</h1>
+          <h2>360浏览器请打开极速模式，或者切换到以下Chrome内核浏览器：</h2>
+          <div class="browsers">
+            <div id="chrome" ><img width="24" src="/chrome.svg" alt="chrome"/><span>谷歌浏览器</span></div>
+            <div id="edge"><img width="24" src="/edge.svg" alt="edge"/><span>微软Edge浏览器</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

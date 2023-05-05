@@ -3,8 +3,12 @@ import {createBrowserRouter, Navigate, NavigateFunction, useNavigate} from "reac
 import TopBar from "./pages/TopBar/TopBar";
 import Files from "./pages/Files/Files";
 import Manage from "./pages/Manage/Manage";
-import {getInstance} from "./sdk/Instance";
 import Redirect from "./pages/Redirect";
+import ChromeOnly from "./pages/Error/ChromeOnly";
+
+export const toErrorChrome = (navigate:NavigateFunction) => {
+  navigate("/error/chrome")
+}
 
 export const toLogin = (navigate: NavigateFunction) => {
   navigate("/login")
@@ -21,7 +25,7 @@ export const toMain = (navigate: NavigateFunction, path?: string) => {
 export const router = createBrowserRouter([
   {
     path: "/login",
-    element: <Login/>,
+    element:<Login/>,
     children: [{path: "cas"}]
   },
   {
