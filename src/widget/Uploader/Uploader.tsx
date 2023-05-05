@@ -25,14 +25,9 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
   }))
   // 清理浏览器默认行为
   const inputArea = useRef<HTMLDivElement>(null)
-  const fileInput = useRef<HTMLInputElement>(null);
   const [selected, setSelected] = useState(new Map<string, Entry>());
-  const [progress,setProgress] = useState(0);
+  const [progress, setProgress] = useState(0);
 
-  // 文件上传
-  const uploadFile = () => {
-    fileInput.current && fileInput.current.click()
-  }
   const onUpload = async () => {
     if (selected.size == 0) {
       return Pop({message: "至少上传一个文件"})
@@ -52,7 +47,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     try {
       for (const [_, entry] of selected) {
         for (const [key, value] of entry.children) {
-          const filePath = pathJoin(path,deletePrefixSlash(key))
+          const filePath = pathJoin(path, deletePrefixSlash(key))
           // 如果是文件夹
           if (!value) {
             await instance.createDir(filePath).then(successHandler)
@@ -104,9 +99,26 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     setSelected(newMap)
   }
 
-  // const inputElement = useRef<HTMLInputElement>(null)
-  const inputElementChange = (event: ChangeEvent) => {
-    console.log(event.target)
+  // 处理用户点击的文件上传
+  const fileInput = useRef<HTMLInputElement>(null);
+  const uploadFile = () => {
+    fileInput.current && fileInput.current.click()
+  }
+  const onFileInputChange = () => {
+    const files = fileInput.current!.files!.length > 0 && fileInput.current!.files
+    if (!files) {
+      return
+    }
+    const entries = new Map<string, Entry>()
+    selected.forEach((value, key) => entries.set(key, value))
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const result = new Map<string, File | null>();
+      result.set(file.name, file)
+      const entryInfo: Entry = {children: result, name: file.name, size: file.size, type: "file"}
+      entries.set("/"+file.name, entryInfo)
+    }
+    setSelected(entries)
   }
 
   const result: ReactNode[] = []
@@ -128,13 +140,14 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
                              ref={inputArea}
       >
           <Icon size={32} icon={"upload"}></Icon>
-          <p>拖动文件到此区域以上传</p>
+          <p>点击上传文件或拖动文件夹到此区域上传</p>
       </div>}
       {!uploadEnabled && <Progress strokeLinecap="butt" percent={progress}/>}
       <div className="upload-file-list">
         {result}
       </div>
-      <input ref={fileInput} type="file" onChange={inputElementChange}  accept="" directory="directory" webkitdirectory="webkitdirectory" multiple="multiple" style={{display: "none"}}/>
+      {/*文件夹上传*/}
+      <input ref={fileInput} type="file" onChange={onFileInputChange} accept="" style={{display: "none"}}/>
     </Modal>
   )
 })
