@@ -1,84 +1,125 @@
 @use "../../scss/variable";
-.login {
-  display: grid;
-  grid-template-columns: 3fr minmax(520px,2fr);
-}
-
-.display {
-  height: 100vh;
-  background-color: variable.$theme-primary;
+.container {
+  height: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  img {
-    width: 100%;
-    object-fit: cover;
+  color: variable.$theme-light;
+  font-family: variable.$theme-font-family;
+  background-color: variable.$theme-primary;
+}
+
+.login-header {
+  margin: 36px 0 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+  align-items: center;
+  > img {
+    width: 360px;
   }
-
-  > div {
-    margin-bottom: 128px;
-    h1 {
-      font: variable.$theme-font-display;
-      margin: 0;
-      color: variable.$theme-light;
-    }
-
-    h2 {
-      font-family: variable.$theme-font-title;
-      color: variable.$theme-light;
-    }
-    > div {
-      display: flex;
-      color: variable.$theme-light;
-      gap: 12px;
-    }
+  > span {
+    font-size: 40px;
+    font-weight: bold;
+    display: block;
+    min-width: 400px;
   }
 }
 
-.login-form-container {
+.login-container {
+  margin: 36px 0;
+  overflow: clip;
+  min-height: 540px;
   display: flex;
-  justify-content: center;
+  background-color: variable.$theme-light;
+  color: variable.$theme-text;
+  border-radius: 8px;
+  grid-template-rows: repeat(auto-fit,minmax(320px,1fr));
+}
+
+.methods {
+  width: 340px;
+  font: variable.$theme-font-emphasize;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-around;
+  > div {
+    padding-bottom: 4px;
+    display: flex;
+    justify-content: center;
+  }
+  .active {
+    border-bottom: 3px solid #1664ff;
+    border-radius: 1px;
+  }
 }
 
 .login-form {
+  min-width: 480px;
   display: flex;
-  width: 320px;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  form {
-    // TODO：使用 grow 进行处理
-    width: 100%;
-    display: grid;
-    font: variable.$theme-font-content;
-    grid-template-columns: 1fr;
-    gap: 20px;
-    span {
-      text-align: right;
-    }
-  }
-  gap: 32px;
   > div {
-    width: 100%;
-  }
-
-  .title {
-    font: variable.$theme-font-title;
-  }
-}
-.login-button-container {
-  > div {
-    color: variable.$theme-light;
-    height: 48px;
-    background-color: variable.$theme-primary;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 4px;
-    cursor: pointer;
-    &:nth-child(n+1) {
-      margin-top: 12px;
+    min-width: 32rem;
+    flex-direction:column;
+    gap: 24px;
+    .form-input {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .input-container {
+      width: 340px;
+    }
+    .confirm {
+      width: 320px;
+      padding: 12px;
+      border-radius: 4px;
+      color: variable.$theme-light;
+      cursor: pointer;
+      background-color: variable.$theme-primary;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
+}
 
+.login-display {
+  background-color: #daeef4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  > img {
+    max-width: 600px;
+    object-fit: fill;
+  }
+}
+
+.spacer {
+  border: 1px solid #e3e8f2;
+}
+
+.other {
+  color: variable.$theme-subtext;
+  width: 340px;
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  flex-direction: column;
+  align-items: center;
+  .other-text {
+    display: flex;
+    justify-content: center;
+  }
+}
+.login-option {
+  cursor: pointer;
+  font: variable.$theme-font-mini;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
