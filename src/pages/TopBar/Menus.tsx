@@ -57,7 +57,7 @@ export default () => {
   }
 
   return <div id="top-bar-menus">
-    <Modal title="修改密码" open={isChangePasswordOpen} onOk={onChangePasswordOk} onCancel={onChangePasswordCancel}>
+    <Modal okText={"确定"} cancelText={"取消"} title="修改密码" open={isChangePasswordOpen} onOk={onChangePasswordOk} onCancel={onChangePasswordCancel}>
       <Input size={"small"} type={"text"} placeHolder={"新密码"} ref={passwordInput}/>
     </Modal>
     {isAdmin && <Buttom onClick={() => toManage(navigate)} text="管理"/>}

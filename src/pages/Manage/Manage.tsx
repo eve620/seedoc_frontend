@@ -138,7 +138,7 @@ export default () => {
   }
 
   return <div className="app-container">
-    <Modal title={userForm?.title} open={isUserFormShow} onOk={userFormOk} onCancel={userFormCancel}>
+    <Modal  okText={"确定"} cancelText={"取消"} title={userForm?.title} open={isUserFormShow} onOk={userFormOk} onCancel={userFormCancel}>
       <form className="form">
         {userForm?.title == "添加用户" && <div><span>工号</span></div>}
         {userForm?.title == "添加用户" && <Input size={"small"} type={"text"} value={userForm?.id}

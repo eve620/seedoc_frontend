@@ -132,7 +132,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
   })
 
   return (
-    <Modal title="上传文件" width={"80vw"} open={active} onOk={onUpload} onCancel={onCancel}>
+    <Modal  okText={"确定"} cancelText={"取消"} title="上传文件" width={"80vw"} open={active} onOk={onUpload} onCancel={onCancel}>
       {uploadEnabled && <div onClick={uploadFile}
                              onDrop={preventDefaults((e) => onChange(e.dataTransfer.items))}
                              onDragOver={preventDefaults()}

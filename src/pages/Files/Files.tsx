@@ -206,10 +206,11 @@ export default () => {
   return (
     <div className="app-container">
       <Uploader onSuccess={onUploadSuccess} ref={uploader}/>
-      <Modal title="新建文件夹" open={isNewDirOpen} onOk={onCreateDirOk} onCancel={onCreateDirCancel}>
+      <Modal okText={"确定"} cancelText={"取消"} title="新建文件夹" open={isNewDirOpen} onOk={onCreateDirOk} onCancel={onCreateDirCancel}>
         <Input size={"small"} type={"text"} placeHolder={"文件夹名称"} ref={newDirName}/>
       </Modal>
-      <Modal title="修改文件名" open={isModifyDirNameActive} onOk={onModifyOk} onCancel={onModifyCancel}>
+      <Modal okText={"确定"} cancelText={"取消"} title="修改文件名" open={isModifyDirNameActive} onOk={onModifyOk}
+             onCancel={onModifyCancel}>
         <Input size={"small"} type={"text"} placeHolder={"新文件名"} ref={modifyDirName}/>
       </Modal>
       <div className="file-container">
