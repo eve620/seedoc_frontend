@@ -3,9 +3,8 @@ import {toMain} from "../../router";
 import Input, {Handler as InputHandler} from "../../component/Input/Input"
 import {NavigateFunction, useNavigate} from "react-router-dom";
 import {getInstance} from "../../sdk/Instance";
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import Pop from "../../component/Pop/Pop";
-import Button from "../../component/Button/Button";
 
 export default () => {
   const navigate = useNavigate()
@@ -35,6 +34,9 @@ export default () => {
   const onLoginCas = () => {
     return getInstance().loginCas()
   }
+  // True: useAccount, False: useCAS
+  const [useAccountOrCAS, setUseAccountOrCAS] = useState(false);
+
   return (
     <div className={"container"}>
       <div className={"login-header"}>
@@ -48,19 +50,28 @@ export default () => {
         </div>
         <div className="login-form">
           <div>
-            <h2>用户登录</h2>
-            <div className={"form-input"}>
-              <Input ref={username} size={"large"} placeHolder={"用户名"} type={"text"}></Input>
-              <Input ref={password} size={"large"} placeHolder={"密码"} type={"password"}></Input>
-            </div>
-            <div onClick={onLogin} className={"confirm"}><span>登录</span></div>
+            {useAccountOrCAS && <div id={"account"}>
+                <h2 className={"form-header"}>用户登录</h2>
+                <div className={"form-container"}>
+                    <Input ref={username} size={"large"} placeHolder={"用户名"} type={"text"}></Input>
+                    <Input ref={password} size={"large"} placeHolder={"密码"} type={"password"}></Input>
+                </div>
+                <div onClick={onLogin} className={"confirm"}><span>登录</span></div>
+            </div>}
+            {!useAccountOrCAS && <div id={"cas"}>
+                <h2 className={"form-header"}>统一认证登录</h2>
+                <div className={"form-container cas"}>
+                    <div style={{cursor: "pointer"}} onClick={onLoginCas}>前往统一认证服务</div>
+                </div>
+            </div>}
 
             <div className={"other"}>
               <div className={"spacer"}></div>
               <div className={"other-text"}><span>或者使用</span></div>
               <div className={"spacer"}/>
             </div>
-            <div onClick={onLoginCas} className={"login-option"}><img src={"/favicon.ico"} alt={"cas-logo"}/>统一认证登录</div>
+            {!useAccountOrCAS && <div onClick={()=>setUseAccountOrCAS(true)} className={"login-option"}><img src={"/favicon.ico"} alt={"cas-logo"}/>账号密码登录</div>}
+            {useAccountOrCAS && <div onClick={() =>setUseAccountOrCAS(false)} className={"login-option"}><img src={"/favicon.ico"} alt={"cas-logo"}/>统一认证登录</div>}
           </div>
         </div>
       </div>
