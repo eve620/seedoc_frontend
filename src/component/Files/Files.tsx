@@ -1,6 +1,6 @@
 import "./style.scss"
 import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
-import {formatBytes, getFileType, orderByName, orderByTime, orderByType} from "../../utils";
+import {formatBytes, formatDate, getFileType, orderByName, orderByTime, orderByType} from "../../utils";
 import Icon from "../Icon/Icon"
 import {Checkbox} from "antd";
 
@@ -110,7 +110,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
             <td>{formatBytes(data.size)}</td>
             <td>{getFileType(data.type)}</td>
             <td>{data.uploader}</td>
-            <td>{data.created.toLocaleDateString()}</td>
+            <td>{formatDate(data.created)}</td>
           </tr>)
         })}
         </tbody>
