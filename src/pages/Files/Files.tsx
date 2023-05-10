@@ -227,7 +227,7 @@ export default () => {
             {isCreateDirShow && <Buttom text="新建" onClick={() => setIsNewDirOpen(true)} icon="create"/>}
           </div>
         </div>
-        <Files ref={fileList} onChange={fileSelectedChange} onClick={downloadOrOpen} data={file}/>
+        <Files ref={fileList} onChange={fileSelectedChange} data={file}/>
       </div>
     </div>
   )
