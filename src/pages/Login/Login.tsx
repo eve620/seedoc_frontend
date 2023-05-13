@@ -70,7 +70,7 @@ export default () => {
               <div className={"other-text"}><span>或者使用</span></div>
               <div className={"spacer"}/>
             </div>
-            {!useAccountOrCAS && <div onClick={()=>setUseAccountOrCAS(true)} className={"login-option"}><img src={"/favicon.ico"} alt={"cas-logo"}/>账号密码登录</div>}
+            {!useAccountOrCAS && <div onClick={()=>setUseAccountOrCAS(true)} className={"login-option"}><img src={"/user.svg"} alt={"cas-logo"}/>账号密码登录</div>}
             {useAccountOrCAS && <div onClick={() =>setUseAccountOrCAS(false)} className={"login-option"}><img src={"/favicon.ico"} alt={"cas-logo"}/>统一认证登录</div>}
           </div>
         </div>
