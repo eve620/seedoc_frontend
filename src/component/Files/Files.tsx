@@ -104,7 +104,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
         {data.map((data) => {
           return (<tr
             key={data.name}
-            className={isActive(active, data.name) ? "active" : ""}>
+            className={(isActive(active, data.name)? "active " : "") + (data.type == "dir" ? "clickable" : "")}>
             <td><Checkbox onClick={() => select(data)}/></td>
             <td onClick={() => onClick(data)}>{data.name}</td>
             <td>{formatBytes(data.size)}</td>

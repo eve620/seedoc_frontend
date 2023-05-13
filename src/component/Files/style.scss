@@ -94,8 +94,10 @@ $checkbox-width: 40px;
       width: $checkbox-width;
     }
 
-    td:nth-child(2) {
-      cursor: pointer;
+    .clickable {
+      td:nth-child(2) {
+        cursor: pointer;
+      }
     }
 
     tr:not(.active) {

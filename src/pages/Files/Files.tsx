@@ -82,11 +82,17 @@ export default () => {
       toMain(navigate, newPath)
       return
     }
-    // 否则下载文件
-    getInstance().objectByPath(pathJoin(path, file.name)).then(res => window.open(res))
+    // 否则下载
+    // getInstance().objectByPath(pathJoin(path, file.name)).then(res => window.open(res))
   }
   const batchDownload = () => {
     const active = fileList.current!.active()
+    if (active.size == 1) {
+      const file = active.values().next().value
+      if (file.type != "dir") {
+        return getInstance().objectByPath(pathJoin(path, file.name)).then(res => window.open(res))
+      }
+    }
     const paths = new Array<string>()
     active.forEach(file => paths.push(pathJoin(path, file.name)))
     // 排除所有文件夹
