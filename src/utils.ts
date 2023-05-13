@@ -104,3 +104,11 @@ export function isBrowserSupport():boolean {
   console.log(explorer);
   return explorer.indexOf("Chrome") >= 0 || explorer.includes("Safari");
 }
+
+export const formatDate = (date: Date) => {
+  return `${date.getFullYear()}-${formatInt(date.getMonth() + 1)}-${formatInt(date.getDate())} ${formatInt(date.getHours())}:${formatInt(date.getMinutes())}`
+}
+
+const formatInt = (num: number): string => {
+  return ("0" + num).slice(-2)
+}
