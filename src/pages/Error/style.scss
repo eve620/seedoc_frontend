@@ -9,7 +9,8 @@
     font: variable.$theme-font-title;
   }
 
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   background-color: variable.$theme-primary;
   min-width: 800px;
   color: variable.$theme-light;
