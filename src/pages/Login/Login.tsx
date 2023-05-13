@@ -40,7 +40,7 @@ export default () => {
   return (
     <div className={"container"}>
       <div className={"login-header"}>
-        <img className={"login-logo"} src={"/logo-login.png"} alt={"校徽"}/>
+        <img className={"login-logo"} src={"/logo_white.png"} alt={"校徽"}/>
         <span>本科教学文件管理系统</span>
       </div>
       <div className="login-container">
