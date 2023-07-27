@@ -1,0 +1,23 @@
+.app-container {
+  margin: 0 auto;
+  min-width: 480px;
+  width: 100vw;
+  box-sizing: content-box;
+}
+@media (min-width: 900px) {
+  .app-container {
+    width: 800px;
+  }
+}
+@media (min-width: 1200px) {
+  .app-container {
+    width: 1000px;
+  }
+}
+@media (min-width: 1920px) {
+  .app-container {
+    width: 1400px;
+  }
+}
+
+/*# sourceMappingURL=App.css.map */

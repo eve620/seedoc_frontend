@@ -1,0 +1,32 @@
+.input-container {
+  display: flex;
+  align-content: stretch;
+  border: 1px solid #EBEBEB;
+  overflow: clip;
+  border-radius: 4px;
+}
+.input-container > span {
+  padding: 8px 16px;
+  background: #BDC3C9;
+  color: #fff;
+  white-space: nowrap;
+}
+.input-container > input {
+  font: 14px/22px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  flex-grow: 1;
+  align-self: stretch;
+  border: none;
+}
+.input-container > input:focus {
+  outline: none;
+}
+.input-container .large {
+  height: 32px;
+  padding: 8px 12px;
+}
+.input-container .small {
+  height: 24px;
+  padding: 6px 8px;
+}
+
+/*# sourceMappingURL=style.css.map */

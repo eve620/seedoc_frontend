@@ -1,0 +1,12 @@
+.avatar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+.avatar img {
+  height: 32px;
+  border-radius: 16px;
+}
+
+/*# sourceMappingURL=style.css.map */

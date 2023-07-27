@@ -1,0 +1,17 @@
+.font-content {
+  font: regular 14px 22px "Microsoft YaHei";
+}
+
+.font-mini {
+  font: regular 12px 16px "Microsoft YaHei";
+}
+
+.font-emphasize {
+  font: bold 14px 22px "Microsoft YaHei";
+}
+
+.font-title {
+  font: semi-bold 24px 36px "Microsoft YaHei";
+}
+
+/*# sourceMappingURL=fonts.css.map */

@@ -1,0 +1,15 @@
+.pages div {
+  display: inline-block;
+  padding: 6px 12px;
+}
+.pages div:hover {
+  border-radius: 50%;
+  background-color: #F3F3F3;
+}
+
+.page-container {
+  display: flex;
+  justify-content: right;
+}
+
+/*# sourceMappingURL=style.css.map */

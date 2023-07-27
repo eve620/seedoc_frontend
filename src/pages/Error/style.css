@@ -1,0 +1,39 @@
+.container {
+  min-height: 100vh;
+  height: 100%;
+  background-color: #1664ff;
+  min-width: 800px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container h1 {
+  font: bold 48px/1.2 -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+.container h2 {
+  font: 24px/1.3 -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+}
+
+.browsers {
+  margin-top: 24px;
+  display: flex;
+  gap: 48px;
+}
+.browsers > div {
+  cursor: pointer;
+  gap: 12px;
+  display: flex;
+  align-items: center;
+}
+.browsers span {
+  font-size: 16px;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/*# sourceMappingURL=style.css.map */
