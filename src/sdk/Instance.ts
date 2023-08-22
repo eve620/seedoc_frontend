@@ -32,6 +32,9 @@ export class Instance {
 
   // 创建文件夹
   public async createDir(path: string) {
+    // const encodedPath = path.replace(/\[|\]/g, (match) => {
+    //   return encodeURIComponent(match);
+    // });
     return this.client.fetch("/meta/" + path, {
       method: "POST"
     })
@@ -51,7 +54,7 @@ export class Instance {
   public upload(dirKey: string, file: File): SimpleUploader {
     let path = pathJoin(dirKey, file.name)
     console.log(dirKey, file.name, path)
-    return new SimpleUploader(this.client,  file, path, file.type)
+    return new SimpleUploader(this.client, file, path, file.type)
   }
 
   // 通过 Etag 获取下载地址

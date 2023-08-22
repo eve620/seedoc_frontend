@@ -24,6 +24,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
       input.current && (input.current.value = "")
     }
   }));
+
   return <div className="input-container">
     <input value={props.value} type={props.type} className={props.size} placeholder={props.placeHolder} ref={input} onChange={(event) => props.onChange && props.onChange(event.target.value)}/>
   </div>

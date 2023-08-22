@@ -1,7 +1,7 @@
 import {File} from "./component/Files/Files";
 
 export function isValidFilename(file: string) {
-  return file.length > 0 && !file.includes("/")
+  return file.length > 0 && !file.includes("/") && !file.includes("[") && !file.includes("]")
 }
 
 export function pathJoin(dir: string, file: string) {
@@ -14,6 +14,11 @@ export function pathJoin(dir: string, file: string) {
 export function getParentPath(path: string) {
   const raw = path.split("/")
   return raw.length <= 1 ? "" : raw.slice(0, -1).join("/")
+}
+
+export function getEndPath(path: string):string {
+  const raw = path.split("/")
+  return raw.length <= 1 ? path : raw.slice(-1).toString()
 }
 
 export function deletePrefixSlash(str: string): string {

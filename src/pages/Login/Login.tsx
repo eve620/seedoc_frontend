@@ -28,9 +28,14 @@ export default () => {
       return instance.whoami().then((uid) => {
         toMain(navigate)
       })
-    }).catch(err => Pop({message: err.message}))
+    }).catch(err => Pop({message: "用户名或密码错误"}))
   }
 
+  const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      onLogin();
+    }
+  }
   const onLoginCas = () => {
     return getInstance().loginCas()
   }
@@ -53,8 +58,12 @@ export default () => {
             {useAccountOrCAS && <div id={"account"}>
                 <h2 className={"form-header"}>用户登录</h2>
                 <div className={"form-container"}>
+                  <div onKeyDown={handleEnter}>
                     <Input ref={username} size={"large"} placeHolder={"用户名"} type={"text"}></Input>
+                  </div>
+                  <div onKeyDown={handleEnter}>
                     <Input ref={password} size={"large"} placeHolder={"密码"} type={"password"}></Input>
+                  </div>
                 </div>
                 <div onClick={onLogin} className={"confirm"}><span>登录</span></div>
             </div>}

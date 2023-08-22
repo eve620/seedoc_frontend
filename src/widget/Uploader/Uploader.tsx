@@ -4,7 +4,7 @@ import {getInstance} from "../../sdk/Instance";
 import {Modal, Progress} from "antd";
 import Icon from "../../component/Icon/Icon";
 import "./style.scss";
-import {deletePrefixSlash, formatBytes, getParentPath, pathJoin} from "../../utils";
+import {deletePrefixSlash, formatBytes, getEndPath, getParentPath, isValidFilename, pathJoin} from "../../utils";
 
 export type Handler = {
   active(path: string): void
@@ -57,6 +57,8 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
           await instance.upload(getParentPath(filePath), value!).do().then(successHandler)
         }
       }
+      //gqj
+      setSelected(new Map())
     } catch (err: any) {
       return Pop({message: err.message})
     }
@@ -64,15 +66,30 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     setIsUploadEnabled(true)
     props.onSuccess && props.onSuccess()
   }
+  //拖动上传
   const onChange = (dataTransfer: DataTransferItemList) => {
     const promises = new Array<Promise<void>>()
     const entries = new Map<string, Entry>()
+    let error = 0
     for (let i = 0; i < dataTransfer.length; i++) {
       const result = new Map<string, File | null>();
       const entry = dataTransfer[i].webkitGetAsEntry()!
       promises.push(readDirOrFiles(entry, result).then(() => {
         const entryInfo: Entry = {children: result, name: entry.name, size: 0, type: entry.isDirectory ? "dir" : "file"}
-        result.forEach(file => entryInfo.size += file ? file.size : 0)
+        // result.forEach(file => entryInfo.size += file ? file.size : 0)
+        result.forEach((type,path) => {
+          if(!isValidFilename(getEndPath(path))){
+            type === null?
+                Pop({message: "文件夹名称 "+getEndPath(path)+" 不规范"}):
+                Pop({message: "文件名称 "+getEndPath(path)+" 不规范"})
+            error = 1
+            return
+          }
+          entryInfo.size += type ? type.size : 0
+        })
+        if(error){
+          return
+        }
         entries.set(entry.fullPath, entryInfo)
       }))
     }
@@ -101,8 +118,12 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
 
   // 处理用户点击的文件上传
   const fileInput = useRef<HTMLInputElement>(null);
+
   const uploadFile = () => {
-    fileInput.current && fileInput.current.click()
+    if(fileInput.current){
+      fileInput.current.value = ''
+      fileInput.current.click()
+    }
   }
   const onFileInputChange = () => {
     const files = fileInput.current!.files!.length > 0 && fileInput.current!.files
@@ -113,6 +134,10 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     selected.forEach((value, key) => entries.set(key, value))
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
+      if(!isValidFilename(file.name)){
+        Pop({message: "文件名称 "+file.name+" 不规范"})
+        return
+      }
       const result = new Map<string, File | null>();
       result.set(file.name, file)
       const entryInfo: Entry = {children: result, name: file.name, size: file.size, type: "file"}

@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
     children: [{path: "cas"}]
   },
   {
-    path: "/",
+    path: "/*",
     element: <Redirect></Redirect>
   },
   {

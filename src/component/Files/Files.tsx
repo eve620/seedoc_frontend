@@ -68,6 +68,19 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     setActive(new Set<File>(active))
     props.onChange && props.onChange(active)
   }
+
+  const selectAll = () => {
+    if (active.size == data.length) {
+      // 如果所有文件都已经被选中，则取消选中所有文件
+      setActive(new Set<File>())
+      props.onChange && props.onChange(new Set<File>())
+    } else {
+      // 否则选中所有文件
+      setActive(new Set<File>(data))
+      props.onChange && props.onChange(new Set<File>(data))
+    }
+  }
+
   const reset = () => {
     const active = new Set<File>()
     setActive(active)
@@ -85,7 +98,12 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
       <table className="file-table" cellSpacing={0}>
         <thead>
         <tr>
-          <th></th>
+
+          <th>
+            {props.data.length > 0 &&
+                <Checkbox checked={ props.data.length==active.size } onClick={() => selectAll()}/>
+            }
+          </th>
           <th className="sortable"
               onClick={() => setOrder(order == "name" ? "name-reverse" : "name")}>
             <span className={order == "name" ? "asc" : (order == "name-reverse" ? "desc" : undefined)}>文件名称</span>
@@ -105,7 +123,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
           return (<tr
             key={data.name}
             className={(isActive(active, data.name)? "active " : "") + (data.type == "dir" ? "clickable" : "")}>
-            <td><Checkbox onClick={() => select(data)}/></td>
+            <td><Checkbox checked={active.has(data)} onClick={() => select(data)}/></td>
             <td onClick={() => onClick(data)}>{data.name}</td>
             <td>{formatBytes(data.size)}</td>
             <td>{getFileType(data.type)}</td>
