@@ -137,6 +137,37 @@ export default () => {
     })
   }
 
+  // 修改最大文件大小
+  const [isChangeFileSizeOpen, setIsChangeFileSizeOpen] = useState(false)
+  const fileSizeInput = useRef<Handler>(null)
+  const onChangeFileSize = () => {
+    setIsChangeFileSizeOpen(true)
+  }
+  const onChangeFileSizeOk = () => {
+    const filesize = fileSizeInput.current!.value()
+    if(isNaN(Number(filesize)) || Number(filesize)<=0){
+      return Pop({message: "输入错误"})
+    }
+    return getInstance().setMaxFileSize(filesize).then(res => {
+      fileSizeInput.current!.reset()
+      setIsChangeFileSizeOpen(false)
+      return Pop({message: "修改成功"})
+    }).catch(err => {
+      return Pop({message: "修改失败" + err.message})
+    })
+  }
+
+  const onChangeFileSizeCancel = () => {
+    setIsChangeFileSizeOpen(false)
+    fileSizeInput.current!.reset()
+  }
+
+  const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      onChangeFileSizeOk();
+    }
+  }
+
   return <div className="app-container">
     <Modal  okText={"确定"} cancelText={"取消"} title={userForm?.title} open={isUserFormShow} onOk={userFormOk} onCancel={userFormCancel}>
       <form className="form">
@@ -156,8 +187,14 @@ export default () => {
         <Select options={roles} onChange={(role) => setUserForm({...userForm!, role})} value={userForm?.role}></Select>
       </form>
     </Modal>
+    <Modal okText={"确定"} cancelText={"取消"} title="最大上传文件" open={isChangeFileSizeOpen} onOk={onChangeFileSizeOk} onCancel={onChangeFileSizeCancel}>
+      <div onKeyDown={handleEnter}>
+        <Input size={"small"} type={"text"} placeHolder={"文件大小（MB）"} ref={fileSizeInput}/>
+      </div>
+    </Modal>
     <div className="menu-group">
       <Button onClick={() => openUserForm("添加用户")} icon={"addUser"} text={"添加用户"}></Button>
+      <Button onClick={onChangeFileSize} icon={"modify"} text={"最大上传文件"}></Button>
     </div>
     <Table dataSource={userData} rowKey={"id"} columns={columns(userDelete, openUserForm)}></Table>
   </div>

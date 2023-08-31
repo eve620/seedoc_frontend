@@ -32,17 +32,14 @@ export class Instance {
 
   // 创建文件夹
   public async createDir(path: string) {
-    // const encodedPath = path.replace(/\[|\]/g, (match) => {
-    //   return encodeURIComponent(match);
-    // });
-    return this.client.fetch("/meta/" + path, {
+    return this.client.fetch("/meta/" + encodeURI(path), {
       method: "POST"
     })
   }
 
   // 删除对象
   public async objectDelete(path: string) {
-    await this.client.fetch("/meta/" + path + "?delete=true", {
+    await this.client.fetch("/meta/" + encodeURI(path) + "?delete=true", {
       method: "PUT"
     }).then(res => {
       if (res.status == 400) {
@@ -191,4 +188,17 @@ export class Instance {
       body: JSON.stringify({password})
     })
   }
+
+  public async setMaxFileSize(size: string){
+    return this.client.json("/file/size", {
+      method: "PUT",
+      body: JSON.stringify({size})
+    })
+  }
+  public async getMaxFileSize(): Promise<String>{
+    return this.client.fetch("/file/size").then(async res => {
+      return await res.json()
+    })
+  }
+
 }

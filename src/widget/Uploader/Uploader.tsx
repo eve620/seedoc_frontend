@@ -1,4 +1,12 @@
-import React, {ChangeEvent, forwardRef, ReactNode, useEffect, useImperativeHandle, useRef, useState} from "react";
+import React, {
+  ChangeEvent,
+  forwardRef,
+  ReactNode,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState
+} from "react";
 import Pop from "../../component/Pop/Pop";
 import {getInstance} from "../../sdk/Instance";
 import {Modal, Progress} from "antd";
@@ -14,6 +22,7 @@ export type Props = {
 }
 
 export default forwardRef<Handler, Props>((props: Props, ref) => {
+  const instance = getInstance()
   const [active, setActive] = useState(false);
   const [path, setPath] = useState("")
   const [uploadEnabled, setIsUploadEnabled] = useState(true)
@@ -27,6 +36,14 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
   const inputArea = useRef<HTMLDivElement>(null)
   const [selected, setSelected] = useState(new Map<string, Entry>());
   const [progress, setProgress] = useState(0);
+  const [maxFileSize , setMaxFileSize] = useState(500);
+  useEffect(() => {
+    instance.getMaxFileSize().then(res=>{
+      setMaxFileSize(Number(res))
+    }).catch(err =>{
+      console.log(err)
+    })
+  }, [active])
 
   const onUpload = async () => {
     if (selected.size == 0) {
@@ -38,7 +55,6 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
       totalFiles += entry.children.size
     }
     setIsUploadEnabled(false)
-    const instance = getInstance()
     let progress = 0;
     const successHandler = () => {
       progress++
@@ -76,18 +92,9 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
       const entry = dataTransfer[i].webkitGetAsEntry()!
       promises.push(readDirOrFiles(entry, result).then(() => {
         const entryInfo: Entry = {children: result, name: entry.name, size: 0, type: entry.isDirectory ? "dir" : "file"}
-        // result.forEach(file => entryInfo.size += file ? file.size : 0)
-        result.forEach((type,path) => {
-          if(!isValidFilename(getEndPath(path))){
-            type === null?
-                Pop({message: "文件夹名称 "+getEndPath(path)+" 不规范"}):
-                Pop({message: "文件名称 "+getEndPath(path)+" 不规范"})
-            error = 1
-            return
-          }
-          entryInfo.size += type ? type.size : 0
-        })
-        if(error){
+        result.forEach(file => entryInfo.size += file ? file.size : 0)
+        if(entryInfo.size > maxFileSize*1048576){
+          Pop({message: "文件大于"+maxFileSize+"MB"})
           return
         }
         entries.set(entry.fullPath, entryInfo)
@@ -134,8 +141,8 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
     selected.forEach((value, key) => entries.set(key, value))
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      if(!isValidFilename(file.name)){
-        Pop({message: "文件名称 "+file.name+" 不规范"})
+      if(file.size > maxFileSize*1048576){
+        Pop({message: "文件大于"+maxFileSize+"MB"})
         return
       }
       const result = new Map<string, File | null>();
@@ -165,7 +172,7 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
                              ref={inputArea}
       >
           <Icon size={32} icon={"upload"}></Icon>
-          <p>点击上传文件或拖动文件夹到此区域上传</p>
+          <p>点击上传文件或拖动文件夹到此区域上传，最大可上传{maxFileSize}MB的文件</p>
       </div>}
       {!uploadEnabled && <Progress strokeLinecap="butt" percent={progress}/>}
       <div className="upload-file-list">

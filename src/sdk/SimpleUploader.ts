@@ -25,7 +25,7 @@ export class SimpleUploader {
 
   // create uploadId
   private async create(pathKey: string): Promise<string> {
-    const res = await this.client.fetch("/meta/" + pathKey, {
+    const res = await this.client.fetch("/meta/" + encodeURI(pathKey), {
       method: "PUT",
       headers: {
         "Content-Type": this.contentType

@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       // '/api': "https://seedoc.xidian.edu.cn/"
-      '/api': "http://localhost:9090"
+      '/api': "http://localhost:8000"
     }
   }
 })

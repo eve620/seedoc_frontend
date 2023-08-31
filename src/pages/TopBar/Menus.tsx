@@ -56,9 +56,17 @@ export default () => {
     passwordInput.current!.reset()
   }
 
+  const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      onChangePasswordOk();
+    }
+  }
+
   return <div id="top-bar-menus">
     <Modal okText={"确定"} cancelText={"取消"} title="修改密码" open={isChangePasswordOpen} onOk={onChangePasswordOk} onCancel={onChangePasswordCancel}>
-      <Input size={"small"} type={"text"} placeHolder={"新密码"} ref={passwordInput}/>
+      <div onKeyDown={handleEnter}>
+        <Input size={"small"} type={"text"} placeHolder={"新密码"} ref={passwordInput}/>
+      </div>
     </Modal>
     {isAdmin && <Buttom onClick={() => toManage(navigate)} text="管理"/>}
     <Buttom onClick={onChangePassword} text="修改密码"/>

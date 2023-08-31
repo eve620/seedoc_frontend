@@ -1,7 +1,7 @@
 import {File} from "./component/Files/Files";
 
 export function isValidFilename(file: string) {
-  return file.length > 0 && !file.includes("/") && !file.includes("[") && !file.includes("]")
+  return file.length > 0 && !file.includes("/")
 }
 
 export function pathJoin(dir: string, file: string) {
