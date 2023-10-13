@@ -5,7 +5,7 @@ export class AuthedClient {
   private user?: User;
   private readonly host: string;
 
-  constructor(host: string)
+  // constructor(host: string)
   constructor(host: string) {
     this.host = host;
   }

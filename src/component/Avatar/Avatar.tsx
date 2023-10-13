@@ -13,7 +13,7 @@ export default (props: { name: string, avatar?: string }) => {
   return (
     <div className="avatar">
       <div>{props.name}</div>
-      <img src={getAvatar(props.avatar)} alt={props.name}/>
+      <img src={getAvatar(props.avatar)} alt={props.name} style={{objectFit:"fill"}}/>
     </div>
   )
 }

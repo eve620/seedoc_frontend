@@ -117,3 +117,21 @@ export const formatDate = (date: Date) => {
 const formatInt = (num: number): string => {
   return ("0" + num).slice(-2)
 }
+
+export function renameFile(filename: string): string {
+  const regex = /^(.*?)(\((\d+)\))?(\..*)?$/; // 正则表达式匹配文件名和编号部分
+  const match = filename.match(regex);
+
+  if (match) {
+    const baseName = match[1] || ''; // 文件名部分
+    const currentNumber = match[3] ? parseInt(match[3], 10) : 0; // 当前编号
+    const extension = match[4] || ''; // 文件扩展名部分
+
+    const newNumber = currentNumber + 1; // 新的编号
+    const newFilename = `${baseName}(${newNumber})${extension}`; // 构建新的文件名
+
+    return newFilename;
+  }
+
+  return filename; // 如果无法匹配，则返回原始文件名
+}

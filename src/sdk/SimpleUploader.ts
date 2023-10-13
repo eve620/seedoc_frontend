@@ -1,4 +1,5 @@
 import {AuthedClient} from "./Auth";
+import {pathJoin} from "../utils";
 
 // 一口气上传文件，不进行分片操作
 export class SimpleUploader {
@@ -16,6 +17,12 @@ export class SimpleUploader {
     this.contentType = contentType
     this.file = file
   }
+
+  // public upload(dirKey: string, file: File): SimpleUploader {
+  //   let path = pathJoin(dirKey, file.name)
+  //   console.log(dirKey, file.name, path)
+  //   return new SimpleUploader(this.client, file, path, file.type)
+  // }
 
   public async do() {
     this.uploadId = await this.create(this.pathKey);
