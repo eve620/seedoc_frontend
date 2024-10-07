@@ -148,6 +148,9 @@ export default () => {
     if(isNaN(Number(filesize)) || Number(filesize)<=0){
       return Pop({message: "输入错误"})
     }
+    if(Number(filesize)>1024){
+      return Pop({message: "最大支持设置为1024MB"})
+    }
     return getInstance().setMaxFileSize(filesize).then(res => {
       fileSizeInput.current!.reset()
       setIsChangeFileSizeOpen(false)

@@ -50,7 +50,6 @@ export class Instance {
 
   public upload(dirKey: string, file: File): SimpleUploader {
     let path = pathJoin(dirKey, file.name)
-    console.log(dirKey, file.name, path)
     return new SimpleUploader(this.client, file, path, file.type)
   }
 

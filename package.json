@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
     "antd": "^5.4.0",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",

@@ -37,7 +37,7 @@ export default () => {
             return getInstance().userList(users).then(users => {
                 res.forEach(file => {
                     const f = fileInfoToFileProps(file)
-                    const user = users.get(file.owner)
+                    const user = users.get(file. owner)
                     f.uploader = user ? user.name : "已删除用户"
                     console.log(f)
                     files.push(f)
