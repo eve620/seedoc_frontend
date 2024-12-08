@@ -56,7 +56,6 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
                 data = orderByType([...props.data])
         }
         setData(data)
-        console.log("reoder finished", data, props.data, order)
     }
     useEffect(reorder, [order, props.data])
     const select = (data: File) => {

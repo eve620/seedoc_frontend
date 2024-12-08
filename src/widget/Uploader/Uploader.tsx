@@ -115,8 +115,8 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
         Promise.all(promises).then(() => {
             let shouldSetSelected = true
             selected.forEach((value, key) => {
-                if(entries.has(key)){
-                    Pop({message:"该文件已上传"})
+                if (entries.has(key)) {
+                    Pop({message: "该文件已上传"})
                     shouldSetSelected = false
                     return
                 }
@@ -127,9 +127,6 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
             }
         })
     }
-    useEffect(() => {
-        console.log(selected)
-    }, [selected])
 
     const onCancel = () => {
         setActive(false)
@@ -172,19 +169,22 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
         //     const entryInfo: Entry = {children: result, name: file.name, size: file.size, type: "file"}
         //     entries.set("/" + file.name, entryInfo)
         // }
-        const file = files[0];
-        if (file.size > maxFileSize * 1048576) {
-            Pop({message: "文件大于" + maxFileSize + "MB"})
-            return
+        // const file = files[0];
+        for (let file of files) {
+            console.log(file)
+            if (file.size > maxFileSize * 1048576) {
+                Pop({message: `文件 ${file.name} 大于` + maxFileSize + "MB"})
+                return
+            }
+            const result = new Map<string, File>();
+            result.set(file.name, file)
+            if (entries.has("/" + file.name)) {
+                Pop({message: `文件 ${file.name} 已上传`})
+                return
+            }
+            const entryInfo: Entry = {children: result, name: file.name, size: file.size, type: "file"}
+            entries.set("/" + file.name, entryInfo)
         }
-        const result = new Map<string, File>();
-        result.set(file.name, file)
-        if(entries.has("/" + file.name)){
-            Pop({message:"该文件已上传"})
-            return
-        }
-        const entryInfo: Entry = {children: result, name: file.name, size: file.size, type: "file"}
-        entries.set("/" + file.name, entryInfo)
         setSelected(entries)
     }
 
@@ -215,7 +215,8 @@ export default forwardRef<Handler, Props>((props: Props, ref) => {
                 {result}
             </div>
             {/*文件夹上传*/}
-            <input ref={fileInput} type="file" onChange={onFileInputChange} accept="" style={{display: "none"}}/>
+            <input ref={fileInput} type="file" onChange={onFileInputChange} accept="" style={{display: "none"}}
+                   multiple/>
         </Modal>
     )
 })

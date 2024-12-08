@@ -37,13 +37,11 @@ export default () => {
             return getInstance().userList(users).then(users => {
                 res.forEach(file => {
                     const f = fileInfoToFileProps(file)
-                    const user = users.get(file. owner)
+                    const user = users.get(file.owner)
                     f.uploader = user ? user.name : "已删除用户"
-                    console.log(f)
                     files.push(f)
                 })
                 setFiles(files)
-                console.log(files)
             })
         }).catch(error => console.error(error))
     }
@@ -170,8 +168,13 @@ export default () => {
             promises.push(instance.rename(pathJoin(register!.path, file.name), pathJoin(path, file.name)))
         })
         Promise.all(promises).then(res => {
-            refreshDir()
             return Pop({message: "操作成功"})
+        }).catch(() => {
+            return Pop({message: "部分或全部移动失败"})
+        })
+        Promise.allSettled(promises).then(res => {
+            refreshDir()
+            setRegister(undefined)
         })
     }
     //按钮组控制
@@ -236,7 +239,7 @@ export default () => {
                         {/*deleteObject()*/}
                         {isDeleteShow && <Buttom text="删除" onClick={() => setIsDelete(true)} icon="trash"/>}
                         {isRenameShow && <Buttom text="重命名" onClick={() => onModifyClick()} icon="modify"/>}
-                        {isCutShow && <Buttom text="剪切" onClick={() => onSetRegister("cut")} icon={"cut"}/>}
+                        {isCutShow && <Buttom text="移动" onClick={() => onSetRegister("cut")} icon={"cut"}/>}
                         {isPasteShow && <Buttom text="粘贴" onClick={() => onPaste()} icon={"paste"}/>}
                         {isDownloadShow && <Buttom text="下载" onClick={() => batchDownload()} icon="download"/>}
                         {isUploadShow && <Buttom text="上传" icon="upload" onClick={onUpload}/>}
